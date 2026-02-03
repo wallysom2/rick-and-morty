@@ -1,0 +1,12 @@
+# Docker Compose for local development (MongoDB only)
+services:
+  mongodb:
+    image: mongo:7
+    container_name: rick-mongo-dev
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
