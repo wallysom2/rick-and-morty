@@ -69,7 +69,7 @@ export function Pagination({
         onClick={handlePrevious}
         disabled={currentPage === 1}
         className={`
-          px-4 py-2 rounded-lg font-medium transition-all
+          px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all
           ${
             currentPage === 1
               ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
@@ -77,7 +77,7 @@ export function Pagination({
           }
         `}
       >
-        ← Prev
+        ← <span className="hidden sm:inline">Anterior</span>
       </button>
 
       {/* Page numbers */}
@@ -104,8 +104,8 @@ export function Pagination({
       </div>
 
       {/* Mobile page indicator */}
-      <div className="sm:hidden px-4 py-2 bg-gray-800 rounded-lg">
-        <span className="text-gray-300">
+      <div className="sm:hidden px-3 py-2 bg-gray-800 rounded-lg">
+        <span className="text-gray-300 text-sm">
           {currentPage} / {totalPages}
         </span>
       </div>
@@ -116,7 +116,7 @@ export function Pagination({
         onMouseEnter={onPrefetch}
         disabled={currentPage === totalPages}
         className={`
-          px-4 py-2 rounded-lg font-medium transition-all
+          px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all
           ${
             currentPage === totalPages
               ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
@@ -124,7 +124,7 @@ export function Pagination({
           }
         `}
       >
-        Next →
+        <span className="hidden sm:inline">Proximo</span> →
       </button>
     </div>
   );

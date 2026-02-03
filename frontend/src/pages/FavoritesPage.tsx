@@ -23,6 +23,12 @@ const statusTextColors: Record<string, string> = {
   unknown: 'text-gray-400',
 };
 
+const statusLabels: Record<string, string> = {
+  Alive: 'Vivo',
+  Dead: 'Morto',
+  unknown: 'Desconhecido',
+};
+
 interface FavoriteCardProps {
   favorite: Favorite;
   onRemove: () => void;
@@ -33,11 +39,11 @@ function FavoriteCard({ favorite, onRemove, isRemoving }: FavoriteCardProps) {
   return (
     <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group">
       {/* Image */}
-      <div className="relative">
+      <div className="relative aspect-square">
         <img
           src={favorite.image}
           alt={favorite.name}
-          className="w-full h-48 object-cover"
+          className="w-full h-full object-cover"
           loading="lazy"
         />
         {/* Favorite button overlay */}
@@ -52,30 +58,30 @@ function FavoriteCard({ favorite, onRemove, isRemoving }: FavoriteCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         {/* Name */}
-        <h3 className="text-lg font-bold text-white truncate mb-2" title={favorite.name}>
+        <h3 className="text-base sm:text-lg font-bold text-white truncate mb-1 sm:mb-2" title={favorite.name}>
           {favorite.name}
         </h3>
 
         {/* Status */}
-        <div className="flex items-center space-x-2 mb-2">
+        <div className="flex items-center space-x-2 mb-1 sm:mb-2">
           <span
             className={`w-2 h-2 rounded-full ${statusColors[favorite.status]}`}
           />
-          <span className={`text-sm ${statusTextColors[favorite.status]}`}>
-            {favorite.status}
+          <span className={`text-xs sm:text-sm ${statusTextColors[favorite.status]}`}>
+            {statusLabels[favorite.status] || favorite.status}
           </span>
         </div>
 
         {/* Species */}
-        <p className="text-gray-400 text-sm">
-          <span className="text-gray-500">Species:</span> {favorite.species}
+        <p className="text-gray-400 text-xs sm:text-sm">
+          <span className="text-gray-500">Especie:</span> {favorite.species}
         </p>
 
         {/* Added date */}
-        <p className="text-gray-500 text-xs mt-2">
-          Added {new Date(favorite.createdAt).toLocaleDateString()}
+        <p className="text-gray-500 text-xs mt-1 sm:mt-2">
+          Adicionado em {new Date(favorite.createdAt).toLocaleDateString('pt-BR')}
         </p>
       </div>
     </div>
@@ -111,24 +117,24 @@ export function FavoritesPage() {
   return (
     <Container>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+      <div className="mb-4 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 flex items-center gap-2 sm:gap-3">
           <span>❤️</span>
-          <span>My Favorites</span>
+          <span>Meus Favoritos</span>
         </h1>
-        <p className="text-gray-400">
-          {pagination.total} favorite {pagination.total === 1 ? 'character' : 'characters'}
+        <p className="text-sm sm:text-base text-gray-400">
+          {pagination.total} {pagination.total === 1 ? 'personagem favorito' : 'personagens favoritos'}
         </p>
       </div>
 
       {/* Filters */}
-      <div className="mb-8 space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="mb-4 sm:mb-8 space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1">
             <SearchBar
               value={search}
               onChange={handleSearchChange}
-              placeholder="Search favorites..."
+              placeholder="Buscar favoritos..."
             />
           </div>
           <div className="flex gap-2">
@@ -136,16 +142,16 @@ export function FavoritesPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'createdAt' | 'name')}
-              className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="flex-1 sm:flex-none bg-gray-800 border border-gray-700 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-green-500"
             >
-              <option value="createdAt">Date Added</option>
-              <option value="name">Name</option>
+              <option value="createdAt">Data</option>
+              <option value="name">Nome</option>
             </select>
             {/* Order */}
             <button
               onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
-              className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white hover:bg-gray-700 transition-colors"
-              title={order === 'asc' ? 'Ascending' : 'Descending'}
+              className="bg-gray-800 border border-gray-700 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 text-white hover:bg-gray-700 transition-colors"
+              title={order === 'asc' ? 'Crescente' : 'Decrescente'}
             >
               {order === 'asc' ? '↑' : '↓'}
             </button>
@@ -158,27 +164,27 @@ export function FavoritesPage() {
         <SkeletonList count={8} />
       ) : isError ? (
         <ErrorState
-          message="Failed to load favorites. Please try again."
+          message="Falha ao carregar favoritos. Tente novamente."
           onRetry={() => refetch()}
         />
       ) : favorites.length === 0 ? (
-        <div className="text-center py-16">
-          <span className="text-6xl mb-4 block">💔</span>
-          <h3 className="text-xl font-semibold text-gray-400 mb-2">No favorites yet</h3>
-          <p className="text-gray-500 mb-6">
-            Start adding characters to your favorites!
+        <div className="text-center py-12 sm:py-16">
+          <span className="text-5xl sm:text-6xl mb-4 block">💔</span>
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-400 mb-2">Nenhum favorito ainda</h3>
+          <p className="text-sm sm:text-base text-gray-500 mb-4 sm:mb-6">
+            Comece adicionando personagens aos seus favoritos!
           </p>
           <Link
             to="/"
-            className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="inline-flex items-center px-4 sm:px-6 py-2.5 sm:py-3 bg-green-600 text-white text-sm sm:text-base rounded-lg hover:bg-green-700 transition-colors"
           >
             <span className="mr-2">🔍</span>
-            Browse Characters
+            Explorar Personagens
           </Link>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {favorites.map((favorite) => (
               <FavoriteCard
                 key={favorite._id}
@@ -190,7 +196,7 @@ export function FavoritesPage() {
           </div>
 
           {/* Pagination */}
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             <Pagination
               currentPage={page}
               totalPages={pagination.pages}

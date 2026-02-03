@@ -1,7 +1,7 @@
-import { Router } from 'express';
+import { Router, type Router as RouterType } from 'express';
 import { favoritesController } from '../controllers/favorites.controller.js';
 
-const router = Router();
+const router: RouterType = Router();
 
 // GET /api/favorites - List all favorites with pagination
 router.get('/', (req, res, next) => favoritesController.getAll(req, res, next));

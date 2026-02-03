@@ -47,26 +47,22 @@ export function HomePage() {
   return (
     <Container>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">
-          Characters
+      <div className="mb-4 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">
+          Personagens
         </h1>
-        <p className="text-gray-400">
-          Explore {pagination.count || 'all'} characters from the Rick and Morty universe
+        <p className="text-sm sm:text-base text-gray-400">
+          Explore {pagination.count || 'todos os'} personagens do universo Rick and Morty
         </p>
       </div>
 
       {/* Filters */}
-      <div className="mb-8 space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1">
-            <SearchBar
-              value={search}
-              onChange={handleSearchChange}
-              placeholder="Search by name..."
-            />
-          </div>
-        </div>
+      <div className="mb-4 sm:mb-8 space-y-3 sm:space-y-4">
+        <SearchBar
+          value={search}
+          onChange={handleSearchChange}
+          placeholder="Buscar por nome..."
+        />
         <StatusFilter value={status} onChange={handleStatusChange} />
       </div>
 
@@ -75,7 +71,7 @@ export function HomePage() {
         <SkeletonList count={8} />
       ) : isError ? (
         <ErrorState
-          message="Failed to load characters. Please try again."
+          message="Falha ao carregar personagens. Tente novamente."
           onRetry={() => refetch()}
         />
       ) : (
@@ -83,7 +79,7 @@ export function HomePage() {
           <CharacterList characters={characters} favoriteIds={favoriteIds} />
 
           {/* Pagination */}
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             <Pagination
               currentPage={page}
               totalPages={pagination.pages}

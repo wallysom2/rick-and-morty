@@ -45,7 +45,7 @@ export function FavoriteButton({
         ${isFavorite ? 'bg-red-500/20' : 'bg-gray-700/50 hover:bg-gray-600/50'}
         ${isAnimating ? 'animate-heart' : ''}
       `}
-      title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+      title={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
     >
       <span
         className={`

@@ -1,7 +1,7 @@
-import { Router } from 'express';
+import { Router, type Router as RouterType } from 'express';
 import { charactersController } from '../controllers/characters.controller.js';
 
-const router = Router();
+const router: RouterType = Router();
 
 // GET /api/characters - List all characters with filters
 router.get('/', (req, res, next) => charactersController.getAll(req, res, next));
