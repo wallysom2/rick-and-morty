@@ -1,54 +1,433 @@
 @import "tailwindcss";
 
-/* Custom styles */
-body {
-  @apply bg-gray-900 text-gray-100 min-h-screen;
-  margin: 0;
+/* ============================================
+   RICK AND MORTY DESIGN SYSTEM
+   ============================================ */
+
+/* Design Tokens - Cores do Universo Rick and Morty */
+:root {
+  /* Portal Colors */
+  --portal-green: #97ce4c;
+  --portal-green-light: #b8e986;
+  --portal-green-dark: #6ba12e;
+  --portal-cyan: #00b0c8;
+  --portal-cyan-light: #5ce1e6;
+  
+  /* Dimension Colors */
+  --dimension-purple: #8b5cf6;
+  --dimension-purple-dark: #6b21a8;
+  --dimension-pink: #ec4899;
+  
+  /* Character Colors */
+  --rick-blue: #44c9f5;
+  --morty-yellow: #f0e14a;
+  --morty-yellow-dark: #c4b82f;
+  
+  /* Status Colors */
+  --status-alive: #00ff88;
+  --status-dead: #ff4757;
+  --status-unknown: #a0a0a0;
+  
+  /* Space Background */
+  --space-black: #0a0a0f;
+  --space-dark: #12121a;
+  --space-medium: #1a1a2e;
+  --space-light: #252540;
+  --space-lighter: #3a3a5c;
+  
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0c0;
+  --text-muted: #6b6b8a;
+  
+  /* Glow Effects */
+  --glow-green: 0 0 20px rgba(151, 206, 76, 0.5), 0 0 40px rgba(151, 206, 76, 0.3);
+  --glow-cyan: 0 0 20px rgba(0, 176, 200, 0.5), 0 0 40px rgba(0, 176, 200, 0.3);
+  --glow-purple: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3);
+  --glow-yellow: 0 0 20px rgba(240, 225, 74, 0.5), 0 0 40px rgba(240, 225, 74, 0.3);
+  --glow-red: 0 0 20px rgba(255, 71, 87, 0.5), 0 0 40px rgba(255, 71, 87, 0.3);
 }
 
-/* Scrollbar styling */
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+* {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+body {
+  background: var(--space-black);
+  color: var(--text-primary);
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Space Background with Stars */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  background: 
+    radial-gradient(ellipse at top, var(--space-dark) 0%, var(--space-black) 50%),
+    radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.9), transparent),
+    radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 230px 80px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(2px 2px at 300px 150px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 370px 50px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 450px 180px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 520px 90px, rgba(255,255,255,0.9), transparent),
+    radial-gradient(2px 2px at 600px 130px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 680px 200px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(2px 2px at 750px 60px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 820px 170px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(2px 2px at 900px 100px, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 980px 220px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(2px 2px at 1050px 40px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 1120px 160px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 1200px 80px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 1280px 190px, rgba(255,255,255,0.9), transparent);
+  background-repeat: repeat;
+  background-size: 1400px 250px;
+  animation: twinkle 8s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+/* Title Font */
+.font-title {
+  font-family: 'Creepster', cursive;
+  letter-spacing: 2px;
+}
+
+/* ============================================
+   SCROLLBAR - Portal Theme
+   ============================================ */
+
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-800;
+  background: var(--space-dark);
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-600 rounded;
+  background: linear-gradient(180deg, var(--portal-green) 0%, var(--portal-green-dark) 100%);
+  border-radius: 5px;
+  border: 2px solid var(--space-dark);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-500;
+  background: linear-gradient(180deg, var(--portal-green-light) 0%, var(--portal-green) 100%);
+  box-shadow: var(--glow-green);
 }
 
-/* Animations */
-@keyframes pulse-heart {
-  0%, 100% {
+/* ============================================
+   ANIMATIONS - Rick and Morty Theme
+   ============================================ */
+
+/* Portal Spin */
+@keyframes portal-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Portal Pulse */
+@keyframes portal-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(151, 206, 76, 0.4), 0 0 40px rgba(151, 206, 76, 0.2);
     transform: scale(1);
   }
-  50% {
-    transform: scale(1.2);
+  50% { 
+    box-shadow: 0 0 30px rgba(151, 206, 76, 0.6), 0 0 60px rgba(151, 206, 76, 0.3);
+    transform: scale(1.02);
   }
+}
+
+/* Float Animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Glow Pulse */
+@keyframes glow-pulse {
+  0%, 100% { 
+    filter: drop-shadow(0 0 5px var(--portal-green));
+  }
+  50% { 
+    filter: drop-shadow(0 0 20px var(--portal-green)) drop-shadow(0 0 40px var(--portal-cyan));
+  }
+}
+
+/* Status Pulse */
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Slide Up */
+@keyframes slide-up {
+  0% { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Heart Animation */
+@keyframes pulse-heart {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+/* Shimmer for Skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Warp Effect */
+@keyframes warp {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.05) rotate(1deg); }
+  50% { transform: scale(1) rotate(0deg); }
+  75% { transform: scale(1.05) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-portal-pulse {
+  animation: portal-pulse 2s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.animate-portal-spin {
+  animation: portal-spin 10s linear infinite;
 }
 
 .animate-heart {
   animation: pulse-heart 0.3s ease-in-out;
 }
 
-/* Skeleton loading */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out forwards;
 }
 
+.animate-warp {
+  animation: warp 4s ease-in-out infinite;
+}
+
+/* Skeleton Loading */
 .skeleton {
-  @apply bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700;
+  background: linear-gradient(
+    90deg,
+    var(--space-medium) 25%,
+    var(--space-light) 50%,
+    var(--space-medium) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+
+/* Glow Effects */
+.glow-green {
+  box-shadow: var(--glow-green);
+}
+
+.glow-cyan {
+  box-shadow: var(--glow-cyan);
+}
+
+.glow-purple {
+  box-shadow: var(--glow-purple);
+}
+
+.glow-yellow {
+  box-shadow: var(--glow-yellow);
+}
+
+.glow-red {
+  box-shadow: var(--glow-red);
+}
+
+/* Text Glow */
+.text-glow-green {
+  text-shadow: 0 0 10px var(--portal-green), 0 0 20px var(--portal-green), 0 0 30px var(--portal-green);
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 10px var(--portal-cyan), 0 0 20px var(--portal-cyan);
+}
+
+.text-glow-yellow {
+  text-shadow: 0 0 10px var(--morty-yellow), 0 0 20px var(--morty-yellow);
+}
+
+/* Portal Border */
+.border-portal {
+  border: 2px solid transparent;
+  background: linear-gradient(var(--space-dark), var(--space-dark)) padding-box,
+              linear-gradient(135deg, var(--portal-green), var(--portal-cyan), var(--dimension-purple)) border-box;
+}
+
+/* Card Hover Effect */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(151, 206, 76, 0.2);
+}
+
+/* Status Indicators with Glow */
+.status-alive {
+  background: var(--status-alive);
+  box-shadow: 0 0 10px var(--status-alive), 0 0 20px var(--status-alive);
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+.status-dead {
+  background: var(--status-dead);
+  box-shadow: 0 0 10px var(--status-dead);
+}
+
+.status-unknown {
+  background: var(--status-unknown);
+}
+
+/* Button Styles */
+.btn-portal {
+  background: linear-gradient(135deg, var(--portal-green) 0%, var(--portal-green-dark) 100%);
+  color: var(--space-black);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-portal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-portal:hover::before {
+  left: 100%;
+}
+
+.btn-portal:hover {
+  box-shadow: var(--glow-green);
+  transform: translateY(-2px);
+}
+
+.btn-portal:active {
+  transform: translateY(0);
+}
+
+.btn-dimension {
+  background: linear-gradient(135deg, var(--dimension-purple) 0%, var(--dimension-purple-dark) 100%);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-dimension:hover {
+  box-shadow: var(--glow-purple);
+  transform: translateY(-2px);
+}
+
+/* Input Styles */
+.input-portal {
+  background: var(--space-medium);
+  border: 2px solid var(--space-light);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.input-portal:focus {
+  border-color: var(--portal-green);
+  box-shadow: 0 0 0 3px rgba(151, 206, 76, 0.2), var(--glow-green);
+  outline: none;
+}
+
+.input-portal::placeholder {
+  color: var(--text-muted);
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(26, 26, 46, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(151, 206, 76, 0.1);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--portal-green) 0%, var(--portal-cyan) 50%, var(--dimension-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Portal Ring Effect */
+.portal-ring {
+  position: relative;
+}
+
+.portal-ring::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--portal-green), var(--portal-cyan), var(--dimension-purple), var(--portal-green));
+  z-index: -1;
+  animation: portal-spin 3s linear infinite;
+}
+
+/* Card Background Gradient */
+.card-gradient {
+  background: linear-gradient(180deg, var(--space-medium) 0%, var(--space-dark) 100%);
+}
+
+/* Favorite Badge */
+.favorite-badge {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
 }

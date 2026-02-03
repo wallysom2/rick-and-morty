@@ -34,7 +34,6 @@ export function Pagination({
     let start = Math.max(1, currentPage - halfShow);
     let end = Math.min(totalPages, currentPage + halfShow);
 
-    // Adjust if we're near the beginning or end
     if (currentPage <= halfShow) {
       end = Math.min(totalPages, showPages);
     }
@@ -42,18 +41,15 @@ export function Pagination({
       start = Math.max(1, totalPages - showPages + 1);
     }
 
-    // Add first page and ellipsis
     if (start > 1) {
       pages.push(1);
       if (start > 2) pages.push('...');
     }
 
-    // Add middle pages
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
 
-    // Add last page and ellipsis
     if (end < totalPages) {
       if (end < totalPages - 1) pages.push('...');
       pages.push(totalPages);
@@ -62,41 +58,61 @@ export function Pagination({
     return pages;
   };
 
+  const buttonBaseClass = `
+    relative px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-sm sm:text-base font-semibold
+    transition-all duration-300 overflow-hidden
+    flex items-center gap-1.5
+  `;
+
+  const activeButtonClass = `
+    bg-gradient-to-r from-[var(--portal-green)] to-[var(--portal-cyan)]
+    text-[var(--space-black)]
+  `;
+
+  const inactiveButtonClass = `
+    bg-[var(--space-medium)] text-[var(--text-secondary)]
+    hover:bg-[var(--space-light)] hover:text-[var(--portal-green)]
+    border border-[var(--space-lighter)]/50
+  `;
+
+  const disabledButtonClass = `
+    bg-[var(--space-dark)] text-[var(--text-muted)]
+    cursor-not-allowed border border-[var(--space-medium)]
+  `;
+
   return (
-    <div className="flex items-center justify-center space-x-2">
+    <div className="flex items-center justify-center gap-2">
       {/* Previous button */}
       <button
         onClick={handlePrevious}
         disabled={currentPage === 1}
-        className={`
-          px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all
-          ${
-            currentPage === 1
-              ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-              : 'bg-gray-800 text-white hover:bg-gray-700'
-          }
-        `}
+        className={`${buttonBaseClass} ${currentPage === 1 ? disabledButtonClass : inactiveButtonClass}`}
       >
-        ← <span className="hidden sm:inline">Anterior</span>
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+        <span className="hidden sm:inline">Anterior</span>
       </button>
 
-      {/* Page numbers */}
-      <div className="hidden sm:flex items-center space-x-1">
+      {/* Page numbers - Desktop */}
+      <div className="hidden sm:flex items-center gap-1.5">
         {getPageNumbers().map((page, index) => (
           <button
             key={index}
             onClick={() => typeof page === 'number' && onPageChange(page)}
             disabled={page === '...'}
             className={`
-              w-10 h-10 rounded-lg font-medium transition-all
-              ${
-                page === currentPage
-                  ? 'bg-green-600 text-white'
-                  : page === '...'
-                  ? 'bg-transparent text-gray-500 cursor-default'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              w-10 h-10 rounded-xl font-semibold
+              transition-all duration-300
+              flex items-center justify-center
+              ${page === currentPage 
+                ? activeButtonClass 
+                : page === '...'
+                ? 'bg-transparent text-[var(--text-muted)] cursor-default'
+                : inactiveButtonClass
               }
             `}
+            style={page === currentPage ? { boxShadow: '0 0 20px rgba(151, 206, 76, 0.4)' } : {}}
           >
             {page}
           </button>
@@ -104,10 +120,11 @@ export function Pagination({
       </div>
 
       {/* Mobile page indicator */}
-      <div className="sm:hidden px-3 py-2 bg-gray-800 rounded-lg">
-        <span className="text-gray-300 text-sm">
-          {currentPage} / {totalPages}
-        </span>
+      <div className="sm:hidden flex items-center gap-2">
+        <div className="px-4 py-2 rounded-xl bg-[var(--space-medium)] border border-[var(--space-lighter)]/50">
+          <span className="text-[var(--portal-green)] font-bold">{currentPage}</span>
+          <span className="text-[var(--text-muted)]"> / {totalPages}</span>
+        </div>
       </div>
 
       {/* Next button */}
@@ -115,16 +132,13 @@ export function Pagination({
         onClick={handleNext}
         onMouseEnter={onPrefetch}
         disabled={currentPage === totalPages}
-        className={`
-          px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-all
-          ${
-            currentPage === totalPages
-              ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-              : 'bg-gray-800 text-white hover:bg-gray-700'
-          }
-        `}
+        className={`${buttonBaseClass} ${currentPage === totalPages ? disabledButtonClass : inactiveButtonClass}`}
+        style={currentPage < totalPages ? {} : {}}
       >
-        <span className="hidden sm:inline">Proximo</span> →
+        <span className="hidden sm:inline">Próximo</span>
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
       </button>
     </div>
   );

@@ -18,7 +18,6 @@ export function HomePage() {
 
   const debouncedSearch = useDebounce(search, 300);
 
-  // Reset page when filters change
   const handleSearchChange = (value: string) => {
     setSearch(value);
     setPage(1);
@@ -46,18 +45,28 @@ export function HomePage() {
 
   return (
     <Container>
-      {/* Header */}
-      <div className="mb-4 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">
-          Personagens
-        </h1>
-        <p className="text-sm sm:text-base text-gray-400">
-          Explore {pagination.count || 'todos os'} personagens do universo Rick and Morty
+      {/* Page Header */}
+      <div className="mb-6 sm:mb-10">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="relative">
+            <div className="w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--portal-green)] to-[var(--portal-cyan)]" />
+            <div className="absolute inset-0 w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--portal-green)] to-[var(--portal-cyan)] blur-sm" />
+          </div>
+          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--portal-green)] text-glow-green">
+            Personagens
+          </h1>
+        </div>
+        <p className="text-sm sm:text-base text-[var(--text-muted)] ml-5">
+          Explore{' '}
+          <span className="text-[var(--portal-cyan)] font-semibold">
+            {pagination.count || 'todos os'}
+          </span>{' '}
+          personagens do multiverso Rick and Morty
         </p>
       </div>
 
-      {/* Filters */}
-      <div className="mb-4 sm:mb-8 space-y-3 sm:space-y-4">
+      {/* Filters Section */}
+      <div className="mb-6 sm:mb-8 space-y-4">
         <SearchBar
           value={search}
           onChange={handleSearchChange}
@@ -71,7 +80,7 @@ export function HomePage() {
         <SkeletonList count={8} />
       ) : isError ? (
         <ErrorState
-          message="Falha ao carregar personagens. Tente novamente."
+          message="Falha ao carregar personagens. O portal dimensional pode estar instável."
           onRetry={() => refetch()}
         />
       ) : (
@@ -79,7 +88,7 @@ export function HomePage() {
           <CharacterList characters={characters} favoriteIds={favoriteIds} />
 
           {/* Pagination */}
-          <div className="mt-6 sm:mt-8">
+          <div className="mt-8 sm:mt-12">
             <Pagination
               currentPage={page}
               totalPages={pagination.pages}
@@ -87,6 +96,18 @@ export function HomePage() {
               onPrefetch={prefetchNextPage}
             />
           </div>
+
+          {/* Page info */}
+          {pagination.pages > 1 && (
+            <div className="mt-4 text-center">
+              <span className="text-sm text-[var(--text-muted)]">
+                Mostrando página{' '}
+                <span className="text-[var(--portal-green)] font-semibold">{page}</span>
+                {' '}de{' '}
+                <span className="text-[var(--portal-green)] font-semibold">{pagination.pages}</span>
+              </span>
+            </div>
+          )}
         </>
       )}
     </Container>
