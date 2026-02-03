@@ -1,16 +1,20 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import { env } from './config/env.js';
+import { apiRoutes } from './routes/index.js';
+import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
+import { requestLogger } from './middlewares/requestLogger.js';
 
 export function createApp(): Application {
   const app = express();
 
-  // Middlewares
+  // Core middlewares
   app.use(cors({
     origin: env.CORS_ORIGIN,
     credentials: true,
   }));
   app.use(express.json());
+  app.use(requestLogger);
 
   // Health check endpoint
   app.get('/api/health', (_req, res) => {
@@ -35,6 +39,13 @@ export function createApp(): Application {
       },
     });
   });
+
+  // API routes
+  app.use('/api', apiRoutes);
+
+  // Error handling
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
   return app;
 }
