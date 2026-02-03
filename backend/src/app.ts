@@ -1,12 +1,13 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import { env } from './config/env.js';
 
 export function createApp(): Application {
   const app = express();
 
   // Middlewares
   app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: env.CORS_ORIGIN,
     credentials: true,
   }));
   app.use(express.json());
@@ -17,10 +18,11 @@ export function createApp(): Application {
       status: 'ok',
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
+      environment: env.NODE_ENV,
     });
   });
 
-  // Placeholder for routes (will be added in Fase 5)
+  // API info endpoint
   app.get('/api', (_req, res) => {
     res.json({
       message: 'Rick and Morty API',
