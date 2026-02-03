@@ -1,0 +1,256 @@
+paths:
+  /health:
+    get:
+      summary: Health check
+      tags: [Health]
+      responses:
+        200:
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+                  uptime:
+                    type: number
+                  environment:
+                    type: string
+
+  /characters:
+    get:
+      summary: List all characters
+      description: Get a paginated list of characters from Rick and Morty API
+      tags: [Characters]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - name: name
+          in: query
+          schema:
+            type: string
+          description: Filter by name
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [Alive, Dead, unknown]
+          description: Filter by status
+        - name: species
+          in: query
+          schema:
+            type: string
+          description: Filter by species
+        - name: gender
+          in: query
+          schema:
+            type: string
+            enum: [Female, Male, Genderless, unknown]
+          description: Filter by gender
+      responses:
+        200:
+          description: List of characters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Character'
+
+  /characters/{id}:
+    get:
+      summary: Get character by ID
+      tags: [Characters]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Character ID
+      responses:
+        200:
+          description: Character details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+        404:
+          description: Character not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /favorites:
+    get:
+      summary: List all favorites
+      description: Get a paginated list of favorited characters
+      tags: [Favorites]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+          description: Items per page
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search by name
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [createdAt, name]
+            default: createdAt
+          description: Sort field
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Sort order
+      responses:
+        200:
+          description: List of favorites
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Favorite'
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      pages:
+                        type: integer
+
+    post:
+      summary: Add favorite
+      description: Add a character to favorites
+      tags: [Favorites]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - characterId
+              properties:
+                characterId:
+                  type: integer
+                  example: 1
+      responses:
+        201:
+          description: Favorite added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Favorite'
+        400:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Character not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /favorites/ids:
+    get:
+      summary: Get favorite IDs
+      description: Get all character IDs that are favorited (for quick UI marking)
+      tags: [Favorites]
+      responses:
+        200:
+          description: List of favorite character IDs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ids:
+                    type: array
+                    items:
+                      type: integer
+                    example: [1, 2, 5, 10]
+
+  /favorites/check/{characterId}:
+    get:
+      summary: Check if favorited
+      tags: [Favorites]
+      parameters:
+        - name: characterId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Character ID
+      responses:
+        200:
+          description: Favorite status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isFavorite:
+                    type: boolean
+
+  /favorites/{characterId}:
+    delete:
+      summary: Remove favorite
+      tags: [Favorites]
+      parameters:
+        - name: characterId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Character ID
+      responses:
+        204:
+          description: Favorite removed
+        404:
+          description: Favorite not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

@@ -1,6 +1,8 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
 import { env } from './config/env.js';
+import { swaggerSpec } from './config/swagger.js';
 import { apiRoutes } from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import { requestLogger } from './middlewares/requestLogger.js';
@@ -15,6 +17,17 @@ export function createApp(): Application {
   }));
   app.use(express.json());
   app.use(requestLogger);
+
+  // Swagger documentation
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Rick and Morty API Docs',
+  }));
+
+  // Swagger JSON endpoint
+  app.get('/api/docs.json', (_req, res) => {
+    res.json(swaggerSpec);
+  });
 
   // Health check endpoint
   app.get('/api/health', (_req, res) => {
