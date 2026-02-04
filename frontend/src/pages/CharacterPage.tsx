@@ -2,7 +2,6 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCharacter, useFavoriteIds, useToggleFavorite, useMultipleEpisodes } from '../hooks';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { TerminalCard } from '../components/TerminalCard';
-import { PortalImage } from '../components/PortalImage';
 import { StatusBadge } from '../components/StatusBadge';
 import { getCharacterDescription } from '../data/character-descriptions';
 
@@ -69,19 +68,38 @@ export function CharacterPage() {
         { label: character.name }
       ]} />
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Left Column - Image */}
-        <div className="relative">
-          {/* Status Badge */}
-          <div className="absolute top-4 right-4 z-10">
-            <StatusBadge status={character.status} />
-          </div>
-          
-          <PortalImage 
-            src={character.image} 
-            alt={character.name}
-            className="w-full max-w-md mx-auto"
+      {/* Add spacing */}
+      <div className="mt-12" />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+        {/* Left Column - Image with dashed border only */}
+        <div className="relative group">
+          {/* Single dashed border - green */}
+          <div 
+            className="absolute -inset-4 border-2 border-dashed border-[var(--color-primary)]/30 rounded-3xl"
           />
+
+          {/* Image container with glow */}
+          <div className="relative overflow-hidden rounded-3xl portal-glow-intense">
+            <img
+              src={character.image}
+              alt={character.name}
+              className="w-full aspect-square object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            
+            {/* Overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-transparent to-transparent opacity-60" />
+            
+            {/* Status Badge */}
+            <div className="absolute top-6 right-6">
+              <StatusBadge status={character.status} />
+            </div>
+
+            {/* ID Badge */}
+            <div className="absolute bottom-6 left-6 px-4 py-2 rounded-full bg-[var(--bg-card)]/80 backdrop-blur-sm border border-[var(--border-default)] font-mono text-xl text-[var(--text-primary)]">
+              #{character.id}
+            </div>
+          </div>
         </div>
         
         {/* Right Column - Info */}
