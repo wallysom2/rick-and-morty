@@ -22,6 +22,28 @@ export interface Character {
 
 export type CharacterStatus = 'Alive' | 'Dead' | 'unknown';
 
+// Episode types from Rick and Morty API
+export interface Episode {
+  id: number;
+  name: string;
+  air_date: string;
+  episode: string; // Format: S01E01
+  characters: string[];
+  url: string;
+  created: string;
+}
+
+// Location types from Rick and Morty API
+export interface Location {
+  id: number;
+  name: string;
+  type: string;
+  dimension: string;
+  residents: string[];
+  url: string;
+  created: string;
+}
+
 // API Response types
 export interface ApiResponse<T> {
   info: {
@@ -34,6 +56,8 @@ export interface ApiResponse<T> {
 }
 
 export interface CharactersResponse extends ApiResponse<Character> {}
+export interface EpisodesResponse extends ApiResponse<Episode> {}
+export interface LocationsResponse extends ApiResponse<Location> {}
 
 // Favorite types
 export interface Favorite {
@@ -61,6 +85,19 @@ export interface CharacterQueryParams {
   status?: CharacterStatus;
   species?: string;
   gender?: string;
+}
+
+export interface EpisodeQueryParams {
+  page?: number;
+  name?: string;
+  episode?: string;
+}
+
+export interface LocationQueryParams {
+  page?: number;
+  name?: string;
+  type?: string;
+  dimension?: string;
 }
 
 export interface FavoriteQueryParams {

@@ -1,4 +1,5 @@
 export { Header } from './Header';
+export { Footer } from './Footer';
 export { Container } from './Container';
 export { CharacterCard } from './CharacterCard';
 export { CharacterList } from './CharacterList';
@@ -8,3 +9,7 @@ export { StatusFilter } from './StatusFilter';
 export { Pagination } from './Pagination';
 export { SkeletonCard, SkeletonList } from './SkeletonCard';
 export { ErrorState } from './ErrorState';
+export { Breadcrumb } from './Breadcrumb';
+export { TerminalCard } from './TerminalCard';
+export { PortalImage } from './PortalImage';
+export { StatusBadge } from './StatusBadge';

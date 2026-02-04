@@ -5,7 +5,7 @@ export interface Character {
   status: CharacterStatus;
   species: string;
   type: string;
-  gender: string;
+  gender: CharacterGender;
   origin: {
     name: string;
     url: string;
@@ -21,6 +21,29 @@ export interface Character {
 }
 
 export type CharacterStatus = 'Alive' | 'Dead' | 'unknown';
+export type CharacterGender = 'Female' | 'Male' | 'Genderless' | 'unknown';
+
+// Episode types from Rick and Morty API
+export interface Episode {
+  id: number;
+  name: string;
+  air_date: string;
+  episode: string; // Format: S01E01
+  characters: string[];
+  url: string;
+  created: string;
+}
+
+// Location types from Rick and Morty API
+export interface Location {
+  id: number;
+  name: string;
+  type: string;
+  dimension: string;
+  residents: string[];
+  url: string;
+  created: string;
+}
 
 // API Response types
 export interface PaginationInfo {
@@ -33,6 +56,16 @@ export interface PaginationInfo {
 export interface CharactersResponse {
   info: PaginationInfo;
   results: Character[];
+}
+
+export interface EpisodesResponse {
+  info: PaginationInfo;
+  results: Episode[];
+}
+
+export interface LocationsResponse {
+  info: PaginationInfo;
+  results: Location[];
 }
 
 // Favorite types
@@ -66,7 +99,20 @@ export interface CharacterFilters {
   name?: string;
   status?: CharacterStatus | '';
   species?: string;
-  gender?: string;
+  gender?: CharacterGender | '';
+}
+
+export interface EpisodeFilters {
+  page?: number;
+  name?: string;
+  episode?: string; // Filter by episode code (S01, S02, etc)
+}
+
+export interface LocationFilters {
+  page?: number;
+  name?: string;
+  type?: string;
+  dimension?: string;
 }
 
 export interface FavoriteFilters {
