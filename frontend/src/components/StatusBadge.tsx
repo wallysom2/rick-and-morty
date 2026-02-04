@@ -6,9 +6,9 @@ interface StatusBadgeProps {
 }
 
 const statusConfig: Record<string, { label: string; className: string }> = {
-  Alive: { label: 'ALIVE', className: 'badge-alive' },
-  Dead: { label: 'DEAD', className: 'badge-dead' },
-  unknown: { label: 'UNKNOWN', className: 'badge-unknown' },
+  Alive: { label: 'VIVO', className: 'badge-alive' },
+  Dead: { label: 'MORTO', className: 'badge-dead' },
+  unknown: { label: 'DESCONHECIDO', className: 'badge-unknown' },
 };
 
 export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {

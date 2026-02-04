@@ -10,9 +10,9 @@ interface CharacterCardProps {
 }
 
 const statusConfig: Record<CharacterStatus, { dotClass: string; color: string; label: string }> = {
-  Alive: { dotClass: 'status-dot-alive', color: 'var(--status-alive)', label: 'Alive' },
-  Dead: { dotClass: 'status-dot-dead', color: 'var(--status-dead)', label: 'Dead' },
-  unknown: { dotClass: 'status-dot-unknown', color: 'var(--status-unknown)', label: 'Unknown' },
+  Alive: { dotClass: 'status-dot-alive', color: 'var(--status-alive)', label: 'Vivo' },
+  Dead: { dotClass: 'status-dot-dead', color: 'var(--status-dead)', label: 'Morto' },
+  unknown: { dotClass: 'status-dot-unknown', color: 'var(--status-unknown)', label: 'Desconhecido' },
 };
 
 export function CharacterCard({

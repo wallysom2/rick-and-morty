@@ -50,12 +50,12 @@ function EpisodeSkeleton() {
 }
 
 const seasonFilters = [
-  { value: '', label: 'All Seasons' },
-  { value: 'S01', label: 'Season 1' },
-  { value: 'S02', label: 'Season 2' },
-  { value: 'S03', label: 'Season 3' },
-  { value: 'S04', label: 'Season 4' },
-  { value: 'S05', label: 'Season 5' },
+  { value: '', label: 'Todas as Temporadas' },
+  { value: 'S01', label: 'Temporada 1' },
+  { value: 'S02', label: 'Temporada 2' },
+  { value: 'S03', label: 'Temporada 3' },
+  { value: 'S04', label: 'Temporada 4' },
+  { value: 'S05', label: 'Temporada 5' },
 ];
 
 export function EpisodesPage() {
@@ -86,10 +86,10 @@ export function EpisodesPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-[var(--text-primary)] mb-2">
-          Episodes
+          Episodios
         </h1>
         <p className="text-[var(--text-secondary)]">
-          {pagination.count || 'All'} episodes from the multiverse
+          {pagination.count || 'Todos os'} episodios do multiverso
         </p>
       </div>
 
@@ -100,7 +100,7 @@ export function EpisodesPage() {
             <SearchBar
               value={search}
               onChange={handleSearchChange}
-              placeholder="Search episodes..."
+              placeholder="Buscar episodios..."
             />
           </div>
           <select
@@ -124,7 +124,7 @@ export function EpisodesPage() {
         </div>
       ) : isError ? (
         <ErrorState
-          message="Failed to load episodes. Please try again."
+          message="Falha ao carregar episodios. Tente novamente."
           onRetry={() => refetch()}
         />
       ) : episodes.length === 0 ? (
@@ -132,8 +132,8 @@ export function EpisodesPage() {
           <svg className="w-16 h-16 mx-auto text-[var(--text-muted)] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
           </svg>
-          <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-2">No episodes found</h3>
-          <p className="text-[var(--text-secondary)]">Try adjusting your search or filters</p>
+          <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-2">Nenhum episodio encontrado</h3>
+          <p className="text-[var(--text-secondary)]">Tente ajustar sua busca ou filtros</p>
         </div>
       ) : (
         <>
