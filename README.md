@@ -60,7 +60,7 @@ cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
 
-### 3. Instale as dependências
+### 3. Instale as dependências na raiz do projeto
 
 ```bash
 pnpm install
