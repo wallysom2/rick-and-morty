@@ -32,6 +32,7 @@ services:
       - MONGO_URL=mongodb://mongodb:27017/rickandmorty
       - CORS_ORIGIN=http://localhost
       - LOG_LEVEL=info
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
       mongodb:
         condition: service_healthy
