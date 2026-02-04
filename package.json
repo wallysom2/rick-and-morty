@@ -1,0 +1,22 @@
+{
+    "name": "rick-and-morty",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Rick and Morty Character Catalog - Monorepo",
+    "scripts": {
+        "dev": "pnpm run --parallel dev",
+        "dev:frontend": "pnpm --filter frontend dev",
+        "dev:backend": "pnpm --filter rick-and-morty-backend dev",
+        "build": "pnpm run --parallel build",
+        "build:frontend": "pnpm --filter frontend build",
+        "build:backend": "pnpm --filter rick-and-morty-backend build",
+        "install:all": "pnpm install",
+        "lint": "pnpm run --parallel lint",
+        "test": "pnpm --filter rick-and-morty-backend test"
+    },
+    "engines": {
+        "node": ">=18.0.0",
+        "pnpm": ">=8.0.0"
+    },
+    "packageManager": "pnpm@10.22.0"
+}
