@@ -18,7 +18,7 @@ interface UseChatReturn {
     clearMessages: () => void;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 export function useChat(): UseChatReturn {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
