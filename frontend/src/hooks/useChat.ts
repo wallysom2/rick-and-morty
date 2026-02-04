@@ -76,11 +76,11 @@ export function useChat(): UseChatReturn {
         setError(null);
     }, []);
 
-    const handleSetCharacter = useCallback((newCharacter: ChatCharacter) => {
+const handleSetCharacter = useCallback((newCharacter: ChatCharacter) => {
         if (newCharacter !== character) {
             setCharacter(newCharacter);
-            // Optionally clear messages when switching characters
-            // setMessages([]);
+            setMessages([]);
+            setError(null);
         }
     }, [character]);
 

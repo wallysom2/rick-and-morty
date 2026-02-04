@@ -400,14 +400,14 @@ model: 'gpt-4o-mini',
                     });
                 }
 
-// Get next response
+// Get next response (more tokens after tool calls for richer responses)
                 response = await this.openai.chat.completions.create({
                     model: 'gpt-4o-mini',
                     messages,
                     tools: TOOLS,
                     tool_choice: 'auto',
-                    temperature: 0.7,
-                    max_tokens: 150,
+                    temperature: 0.6,
+                    max_tokens: 300,
                 });
 
                 assistantMessage = response.choices[0].message;
