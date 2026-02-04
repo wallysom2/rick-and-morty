@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocations, useDebounce } from '../hooks';
-import { Container, SearchBar, Pagination, ErrorState } from '../components';
+import { Container, SearchBar, FilterSelect, ActiveFilters, Pagination, ErrorState } from '../components';
 import type { Location } from '../types';
 
 function LocationCard({ location }: { location: Location }) {
@@ -26,7 +26,7 @@ function LocationCard({ location }: { location: Location }) {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="truncate">{location.dimension || 'Dimensao desconhecida'}</span>
+              <span className="truncate">{location.dimension || 'Dimensão desconhecida'}</span>
             </p>
           </div>
         </div>
@@ -58,7 +58,7 @@ function LocationSkeleton() {
 const typeFilters = [
   { value: '', label: 'Todos os tipos' },
   { value: 'Planet', label: 'Planeta' },
-  { value: 'Space station', label: 'Estacao espacial' },
+  { value: 'Space station', label: 'Estação espacial' },
   { value: 'Microverse', label: 'Microverso' },
   { value: 'TV', label: 'TV' },
   { value: 'Resort', label: 'Resort' },
@@ -83,11 +83,35 @@ export function LocationsPage() {
     setPage(1);
   };
 
+  const handleClearFilters = () => {
+    setSearch('');
+    setType('');
+    setPage(1);
+  };
+
   const { locations, pagination, isLoading, isError, refetch, prefetchNextPage } = useLocations({
     page,
     name: debouncedSearch || undefined,
     type: type || undefined,
   });
+
+  // Build active filters
+  const activeFilters = [];
+  if (search) {
+    activeFilters.push({
+      label: `Busca: ${search}`,
+      value: search,
+      onClear: () => setSearch(''),
+    });
+  }
+  if (type) {
+    const typeLabel = typeFilters.find(t => t.value === type)?.label || type;
+    activeFilters.push({
+      label: typeLabel,
+      value: type,
+      onClear: () => setType(''),
+    });
+  }
 
   return (
     <Container>
@@ -96,11 +120,9 @@ export function LocationsPage() {
         <div className="flex items-center gap-3 mb-2">
           <div className="relative">
             <div className="w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--color-primary)] to-cyan-400" />
-            <div className="absolute inset-0 w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--color-primary)] to-cyan-400 blur-sm" />
           </div>
-          <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--color-primary)]" 
-            style={{ textShadow: '0 0 20px var(--color-primary), 0 0 40px var(--color-primary)' }}>
-            Localizacoes
+          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--color-primary)]">
+            Localizações
           </h1>
         </div>
         <p className="text-sm sm:text-base text-[var(--text-muted)] ml-5">
@@ -108,30 +130,41 @@ export function LocationsPage() {
           <span className="text-[var(--color-primary)] font-semibold">
             {pagination.count || 'todas as'}
           </span>{' '}
-          localizacoes do multiverso Rick and Morty
+          localizações do multiverso Rick and Morty
         </p>
       </div>
 
-      {/* Filters */}
+      {/* Filters Section */}
       <div className="mb-6 sm:mb-8 space-y-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <SearchBar
               value={search}
               onChange={handleSearchChange}
-              placeholder="Buscar localizacoes..."
+              placeholder="Buscar localizações..."
             />
           </div>
-          <select
-            value={type}
-            onChange={(e) => handleTypeChange(e.target.value)}
-            className="input sm:w-48"
-          >
-            {typeFilters.map((t) => (
-              <option key={t.value} value={t.value}>{t.label}</option>
-            ))}
-          </select>
+          <div className="sm:w-56">
+            <FilterSelect
+              value={type}
+              onChange={handleTypeChange}
+              options={typeFilters}
+              placeholder="Todos os tipos"
+              ariaLabel="Filtrar por tipo"
+              icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+              }
+            />
+          </div>
         </div>
+
+        {/* Active Filters */}
+        <ActiveFilters 
+          filters={activeFilters}
+          onClearAll={handleClearFilters}
+        />
       </div>
 
       {/* Content */}
@@ -143,7 +176,7 @@ export function LocationsPage() {
         </div>
       ) : isError ? (
         <ErrorState
-          message="Falha ao carregar localizacoes. O portal pode estar instavel."
+          message="Falha ao carregar localizações. O portal pode estar instável."
           onRetry={() => refetch()}
         />
       ) : locations.length === 0 ? (
@@ -168,10 +201,10 @@ export function LocationsPage() {
             </div>
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)] mb-2 text-center">
-            Nenhuma localizacao encontrada
+            Nenhuma localização encontrada
           </h3>
           <p className="text-sm sm:text-base text-[var(--text-muted)] text-center max-w-md">
-            Tente ajustar sua busca ou filtros para encontrar outras dimensoes
+            Tente ajustar sua busca ou filtros para encontrar outras dimensões
           </p>
         </div>
       ) : (
@@ -196,7 +229,7 @@ export function LocationsPage() {
           {pagination.pages > 1 && (
             <div className="mt-4 text-center">
               <span className="text-sm text-[var(--text-muted)]">
-                Mostrando pagina{' '}
+                Mostrando página{' '}
                 <span className="text-[var(--color-primary)] font-semibold">{page}</span>
                 {' '}de{' '}
                 <span className="text-[var(--color-primary)] font-semibold">{pagination.pages}</span>

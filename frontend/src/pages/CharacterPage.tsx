@@ -2,7 +2,6 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCharacter, useFavoriteIds, useToggleFavorite, useMultipleEpisodes } from '../hooks';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { TerminalCard } from '../components/TerminalCard';
-import { StatusBadge } from '../components/StatusBadge';
 import { getCharacterDescription } from '../data/character-descriptions';
 
 export function CharacterPage() {
@@ -20,7 +19,7 @@ export function CharacterPage() {
   const episodeIds = character?.episode?.map(url => {
     const match = url.match(/\/episode\/(\d+)/);
     return match ? Number(match[1]) : 0;
-  }).filter(id => id > 0).slice(0, 5) || [];
+  }).filter(id => id > 0) || [];
   
   const { data: episodes = [] } = useMultipleEpisodes(episodeIds);
 
@@ -90,11 +89,6 @@ export function CharacterPage() {
             {/* Overlay gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-transparent to-transparent opacity-60" />
             
-            {/* Status Badge */}
-            <div className="absolute top-6 right-6">
-              <StatusBadge status={character.status} />
-            </div>
-
             {/* ID Badge */}
             <div className="absolute bottom-6 left-6 px-4 py-2 rounded-full bg-[var(--bg-card)]/80 backdrop-blur-sm border border-[var(--border-default)] font-mono text-xl text-[var(--text-primary)]">
               #{character.id}

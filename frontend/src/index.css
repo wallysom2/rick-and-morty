@@ -17,6 +17,19 @@
   --color-primary-dark: #00cc6a;
   --color-primary-light: #4dffaa;
   
+  /* Portal Colors */
+  --portal-green: #00ff88;
+  --portal-cyan: #00d4ff;
+  --dimension-pink: #ec4899;
+  --dimension-purple: #a855f7;
+  
+  /* Space Theme Colors */
+  --space-black: #0d1117;
+  --space-dark: #0d1117;
+  --space-medium: #1c2128;
+  --space-light: #30363d;
+  --space-lighter: #484f58;
+  
   /* Background Colors - Dark Theme */
   --bg-main: #0d1117;
   --bg-card: #161b22;
@@ -372,21 +385,27 @@ code, pre, .font-mono {
 }
 
 .badge-alive {
-  background-color: rgba(0, 255, 136, 0.15);
+  background-color: rgba(0, 0, 0, 0.85);
   color: var(--status-alive);
-  border: 1px solid rgba(0, 255, 136, 0.3);
+  border: 2px solid var(--status-alive);
+  text-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .badge-dead {
-  background-color: rgba(255, 71, 87, 0.15);
+  background-color: rgba(0, 0, 0, 0.85);
   color: var(--status-dead);
-  border: 1px solid rgba(255, 71, 87, 0.3);
+  border: 2px solid var(--status-dead);
+  text-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .badge-unknown {
-  background-color: rgba(139, 148, 158, 0.15);
+  background-color: rgba(0, 0, 0, 0.85);
   color: var(--status-unknown);
-  border: 1px solid rgba(139, 148, 158, 0.3);
+  border: 2px solid var(--status-unknown);
+  text-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 /* Terminal Card */

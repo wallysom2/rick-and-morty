@@ -13,7 +13,7 @@ export function EpisodePage() {
   const characterIds = episode?.characters?.map(url => {
     const match = url.match(/\/character\/(\d+)/);
     return match ? Number(match[1]) : 0;
-  }).filter(id => id > 0).slice(0, 20) || [];
+  }).filter(id => id > 0) || [];
   
   const { data: characters = [] } = useMultipleCharacters(characterIds);
 
@@ -128,11 +128,6 @@ export function EpisodePage() {
                 </Link>
               ))}
             </div>
-            {episode.characters.length > 20 && (
-              <p className="text-sm text-[var(--text-muted)] mt-4">
-                +{episode.characters.length - 20} outros personagens
-              </p>
-            )}
           </div>
         )}
         

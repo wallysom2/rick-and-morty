@@ -48,8 +48,8 @@ export class EpisodesController {
 
   async getMultiple(req: Request, res: Response): Promise<void> {
     try {
-      const { ids } = req.params;
-      const episodeIds = ids.split(',').map(Number).filter(id => !isNaN(id));
+      const { id } = req.params;
+      const episodeIds = id.split(',').map(Number).filter(id => !isNaN(id));
 
       if (episodeIds.length === 0) {
         res.status(400).json({ error: 'Invalid episode IDs' });

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import {
   Container,
   SearchBar,
+  FilterSelect,
+  ActiveFilters,
   Pagination,
   SkeletonList,
   ErrorState,
@@ -124,6 +126,11 @@ function FavoriteCard({ favorite, onRemove, isRemoving }: FavoriteCardProps) {
   );
 }
 
+const sortByOptions = [
+  { value: 'createdAt', label: 'Data' },
+  { value: 'name', label: 'Nome' },
+];
+
 export function FavoritesPage() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -134,6 +141,18 @@ export function FavoritesPage() {
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
+    setPage(1);
+  };
+
+  const handleSortByChange = (value: string) => {
+    setSortBy(value as 'createdAt' | 'name');
+    setPage(1);
+  };
+
+  const handleClearFilters = () => {
+    setSearch('');
+    setSortBy('createdAt');
+    setOrder('desc');
     setPage(1);
   };
 
@@ -150,6 +169,28 @@ export function FavoritesPage() {
   const favorites = data?.data || [];
   const pagination = data?.pagination || { total: 0, page: 1, limit: 12, pages: 0 };
 
+  // Build active filters
+  const activeFilters = [];
+  if (search) {
+    activeFilters.push({
+      label: `Busca: ${search}`,
+      value: search,
+      onClear: () => setSearch(''),
+    });
+  }
+  if (sortBy !== 'createdAt' || order !== 'desc') {
+    const sortLabel = sortByOptions.find(s => s.value === sortBy)?.label || sortBy;
+    const orderLabel = order === 'asc' ? 'Crescente' : 'Decrescente';
+    activeFilters.push({
+      label: `${sortLabel} (${orderLabel})`,
+      value: `${sortBy}-${order}`,
+      onClear: () => {
+        setSortBy('createdAt');
+        setOrder('desc');
+      },
+    });
+  }
+
   return (
     <Container>
       {/* Page Header */}
@@ -157,11 +198,8 @@ export function FavoritesPage() {
         <div className="flex items-center gap-3 mb-2">
           <div className="relative">
             <div className="w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--dimension-pink)] to-[var(--status-dead)]" />
-            <div className="absolute inset-0 w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--dimension-pink)] to-[var(--status-dead)] blur-sm" />
           </div>
-          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--dimension-pink)]"
-            style={{ textShadow: '0 0 20px var(--dimension-pink), 0 0 40px var(--dimension-pink)' }}
-          >
+          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--dimension-pink)]">
             Meus Favoritos
           </h1>
         </div>
@@ -173,7 +211,7 @@ export function FavoritesPage() {
         </p>
       </div>
 
-      {/* Filters */}
+      {/* Filters Section */}
       <div className="mb-6 sm:mb-8 space-y-4">
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1">
@@ -183,37 +221,55 @@ export function FavoritesPage() {
               placeholder="Buscar favoritos..."
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 sm:gap-3">
             {/* Sort by select */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'createdAt' | 'name')}
-              className="
-                flex-1 sm:flex-none px-4 py-3 rounded-xl
-                bg-[var(--space-medium)] border-2 border-[var(--space-light)]
-                text-[var(--text-primary)] text-sm sm:text-base
-                focus:outline-none focus:border-[var(--dimension-pink)]
-                transition-all duration-300 cursor-pointer
-              "
-            >
-              <option value="createdAt">Data</option>
-              <option value="name">Nome</option>
-            </select>
+            <div className="flex-1 sm:w-36">
+              <FilterSelect
+                value={sortBy}
+                onChange={handleSortByChange}
+                options={sortByOptions}
+                placeholder="Ordenar"
+                accentColor="var(--dimension-pink)"
+                ariaLabel="Ordenar por"
+                icon={
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                  </svg>
+                }
+              />
+            </div>
             
             {/* Order button */}
             <button
               onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
               className="
+                relative group
                 px-4 py-3 rounded-xl
-                bg-[var(--space-medium)] border-2 border-[var(--space-light)]
+                bg-[var(--space-medium)]
+                border-2 border-[var(--space-light)]
                 text-[var(--text-primary)]
-                hover:border-[var(--dimension-pink)] hover:text-[var(--dimension-pink)]
+                hover:border-[var(--dimension-pink)]
+                hover:text-[var(--dimension-pink)]
+                focus:outline-none
                 transition-all duration-300
               "
-              title={order === 'asc' ? 'Crescente' : 'Decrescente'}
+              title={order === 'asc' ? 'Ordem Crescente' : 'Ordem Decrescente'}
+              style={{
+                borderColor: order !== 'desc' ? 'var(--dimension-pink)' : 'var(--space-light)',
+                color: order !== 'desc' ? 'var(--dimension-pink)' : 'var(--text-primary)',
+              }}
             >
+              {/* Glow effect on active */}
+              {order !== 'desc' && (
+                <div 
+                  className="absolute -inset-0.5 rounded-xl opacity-50 blur transition-opacity duration-300"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--dimension-pink), var(--status-dead))',
+                  }}
+                />
+              )}
               <svg 
-                className={`w-5 h-5 transition-transform duration-300 ${order === 'asc' ? 'rotate-180' : ''}`} 
+                className={`relative w-5 h-5 transition-transform duration-300 ${order === 'asc' ? 'rotate-180' : ''}`} 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -223,6 +279,13 @@ export function FavoritesPage() {
             </button>
           </div>
         </div>
+
+        {/* Active Filters */}
+        <ActiveFilters 
+          filters={activeFilters}
+          onClearAll={handleClearFilters}
+          accentColor="var(--dimension-pink)"
+        />
       </div>
 
       {/* Content */}
@@ -258,31 +321,35 @@ export function FavoritesPage() {
           </div>
           
           <h3 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)] mb-2 text-center">
-            Nenhum favorito ainda
+            Nenhum favorito {search ? 'encontrado' : 'ainda'}
           </h3>
           <p className="text-sm sm:text-base text-[var(--text-muted)] mb-8 text-center max-w-md">
-            Comece a explorar o multiverso e adicione personagens ao seu portal pessoal!
+            {search 
+              ? 'Tente ajustar sua busca para encontrar outros favoritos'
+              : 'Comece a explorar o multiverso e adicione personagens ao seu portal pessoal!'}
           </p>
           
-          <Link
-            to="/"
-            className="
-              group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold
-              bg-gradient-to-r from-[var(--portal-green)] to-[var(--portal-cyan)]
-              text-[var(--space-black)]
-              transition-all duration-300
-              hover:shadow-[0_0_30px_rgba(151,206,76,0.5)]
-              hover:scale-105
-              active:scale-95
-            "
-          >
-            <span className="flex items-center gap-2 sm:gap-3">
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              Explorar Personagens
-            </span>
-          </Link>
+          {!search && (
+            <Link
+              to="/"
+              className="
+                group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold
+                bg-gradient-to-r from-[var(--portal-green)] to-[var(--portal-cyan)]
+                text-[var(--space-black)]
+                transition-all duration-300
+                hover:shadow-[0_0_30px_rgba(151,206,76,0.5)]
+                hover:scale-105
+                active:scale-95
+              "
+            >
+              <span className="flex items-center gap-2 sm:gap-3">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Explorar Personagens
+              </span>
+            </Link>
+          )}
         </div>
       ) : (
         <>

@@ -13,7 +13,7 @@ export function LocationPage() {
   const residentIds = location?.residents?.map(url => {
     const match = url.match(/\/character\/(\d+)/);
     return match ? Number(match[1]) : 0;
-  }).filter(id => id > 0).slice(0, 20) || [];
+  }).filter(id => id > 0) || [];
   
   const { data: residents = [] } = useMultipleCharacters(residentIds);
 
@@ -140,11 +140,6 @@ export function LocationPage() {
                 </Link>
               ))}
             </div>
-            {location.residents.length > 20 && (
-              <p className="text-sm text-[var(--text-muted)] mt-4">
-                +{location.residents.length - 20} outros residentes
-              </p>
-            )}
           </div>
         )}
 
