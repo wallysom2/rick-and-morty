@@ -15,6 +15,17 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -50,6 +61,10 @@ jobs:
 
       - name: Run tests
         run: pnpm test
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MONGO_URL: mongodb://localhost:27017/rickandmorty-test
+          NODE_ENV: test
 
   # Job 2: Push to Docker Hub (only if tests pass)
   docker-push:
