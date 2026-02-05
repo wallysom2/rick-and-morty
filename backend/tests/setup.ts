@@ -1,13 +1,13 @@
 import { beforeAll, afterAll, beforeEach } from 'vitest';
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-
-let mongoServer: MongoMemoryServer | null = null;
 
 beforeAll(async () => {
-  // Start in-memory MongoDB with increased timeout
-  mongoServer = await MongoMemoryServer.create();
-  const mongoUri = mongoServer.getUri();
+  // Use MongoDB instance from global setup
+  const mongoUri = process.env.MONGO_URI_TEST;
+  
+  if (!mongoUri) {
+    throw new Error('MONGO_URI_TEST not set - global setup may have failed');
+  }
 
   // Set environment variables for tests
   process.env.NODE_ENV = 'test';
@@ -17,7 +17,7 @@ beforeAll(async () => {
   process.env.LOG_LEVEL = 'silent';
 
   await mongoose.connect(mongoUri);
-}, 60000); // 60 second timeout for downloading MongoDB binary
+});
 
 beforeEach(async () => {
   // Clear all collections before each test
@@ -29,7 +29,4 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await mongoose.disconnect();
-  if (mongoServer) {
-    await mongoServer.stop();
-  }
 });
