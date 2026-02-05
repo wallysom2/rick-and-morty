@@ -4,6 +4,14 @@
 
 Um catálogo interativo de personagens da série Rick and Morty, construído como um **monorepo** com frontend React e backend Node.js.
 
+**✨ Recursos principais:**
+- 🎬 Navegação completa de personagens, episódios e localizações
+- ⭐ Sistema de favoritos persistente
+- 🤖 Chat interativo com Rick e Morty usando IA (OpenAI GPT)
+- 📚 Documentação completa da API com Swagger
+- 🐳 Suporte completo a Docker
+- 🔎 Testes unitários
+
 ---
 
 ## 📋 Índice
@@ -59,6 +67,13 @@ cp backend/.env.example backend/.env
 # No frontend
 cp frontend/.env.example frontend/.env
 ```
+
+**Importante para funcionalidade de chat:**
+- A funcionalidade de chat com IA é **opcional**
+- Para habilitá-la, configure `OPENAI_API_KEY` no `backend/.env`
+- Obtenha sua chave em: https://platform.openai.com/api-keys
+- O projeto funciona normalmente sem a chave (chat ficará desabilitado)
+- É possível testar essa funcionalidade atraves do link de deploy
 
 ### 3. Instale as dependências na raiz do projeto
 
@@ -148,6 +163,12 @@ rick-and-morty/
 │
 ├── 📂 backend/           # API Node.js + Express
 │   ├── src/
+│   │   ├── config/       # Configurações (DB, env, Swagger)
+│   │   ├── controllers/  # Controllers HTTP
+│   │   ├── docs/         # OpenAPI/Swagger docs
+│   │   ├── routes/       # Definição de rotas
+│   │   ├── services/     # Lógica de negócio + APIs externas
+│   │   └── models/       # Mongoose schemas
 │   ├── tests/
 │   ├── package.json
 │   └── README.md         # Documentação do Backend
@@ -180,6 +201,15 @@ Todos os scripts podem ser executados na raiz do projeto:
 ---
 
 ## 🔍 Troubleshooting
+
+### Erro: "OPENAI_API_KEY is required"
+
+Este erro ocorria em versões antigas. **Já foi resolvido!** A chave agora é opcional.
+
+Se você ainda vê esse erro:
+- A funcionalidade de chat é opcional e não impede o projeto de rodar
+- Para usar o chat, obtenha uma chave em: https://platform.openai.com/api-keys
+- Configure no `backend/.env`: `OPENAI_API_KEY=sua-chave-aqui`
 
 ### Erro: "tsx is not recognized"
 

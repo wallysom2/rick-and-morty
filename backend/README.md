@@ -27,6 +27,7 @@ API RESTful para gerenciar o catálogo de personagens da série Rick and Morty.
 | **Mongoose** | 8.0.3 | ODM para MongoDB |
 | **Zod** | 3.22.4 | Validação de schemas |
 | **Pino** | 8.17.2 | Logger de alta performance |
+| **OpenAI** | 4.x | API de chat com IA (opcional) |
 | **Swagger** | 6.2.8 | Documentação da API |
 | **Vitest** | 1.1.3 | Framework de testes |
 
@@ -40,46 +41,56 @@ backend/
 │   ├── 📂 config/          # Configurações
 │   │   ├── database.ts     # Conexão MongoDB
 │   │   ├── env.ts          # Variáveis de ambiente
-│   │   └── logger.ts       # Configuração do Pino
+│   │   └── swagger.ts      # Configuração Swagger
 │   │
 │   ├── 📂 controllers/     # Controladores HTTP
-│   │   ├── character.controller.ts
+│   │   ├── characters.controller.ts
+│   │   ├── favorites.controller.ts
+│   │   ├── episodes.controller.ts
+│   │   ├── locations.controller.ts
+│   │   ├── chat.controller.ts
 │   │   └── health.controller.ts
 │   │
-│   ├── 📂 docs/            # Configuração Swagger
-│   │   └── swagger.ts
+│   ├── 📂 docs/            # Documentação OpenAPI
+│   │   └── api.yaml
 │   │
 │   ├── 📂 middlewares/     # Middlewares Express
 │   │   ├── error.middleware.ts
-│   │   └── validation.middleware.ts
+│   │   └── requestId.middleware.ts
 │   │
 │   ├── 📂 models/          # Modelos Mongoose
-│   │   └── character.model.ts
+│   │   └── favorite.model.ts
 │   │
 │   ├── 📂 repositories/    # Camada de acesso a dados
-│   │   └── character.repository.ts
+│   │   └── favorites.repository.ts
 │   │
 │   ├── 📂 routes/          # Definição de rotas
-│   │   ├── character.routes.ts
+│   │   ├── characters.routes.ts
+│   │   ├── favorites.routes.ts
+│   │   ├── episodes.routes.ts
+│   │   ├── locations.routes.ts
+│   │   ├── chat.routes.ts
 │   │   ├── health.routes.ts
 │   │   └── index.ts
 │   │
 │   ├── 📂 services/        # Lógica de negócio
-│   │   ├── character.service.ts
-│   │   └── rickandmorty.service.ts
+│   │   ├── rickandmorty.service.ts
+│   │   ├── favorites.service.ts
+│   │   └── chat.service.ts
 │   │
 │   ├── 📂 types/           # Definições TypeScript
-│   │   └── character.types.ts
+│   │   └── index.ts
 │   │
 │   ├── 📂 utils/           # Utilitários
-│   │   ├── api-error.ts
-│   │   └── response.ts
+│   │   ├── cache.ts
+│   │   └── logger.ts
 │   │
 │   ├── 📄 app.ts           # Configuração do Express
 │   └── 📄 index.ts         # Entry point
 │
 ├── 📂 tests/               # Testes automatizados
-│   ├── character.test.ts
+│   ├── characters.test.ts
+│   ├── favorites.test.ts
 │   └── setup.ts
 │
 ├── 📄 Dockerfile           # Configuração Docker
@@ -110,6 +121,11 @@ CORS_ORIGIN=http://localhost:5173
 
 # Logs
 LOG_LEVEL=debug
+
+# OpenAI API Key (optional - only required for chat feature)
+# Get your key at: https://platform.openai.com/api-keys
+# Leave empty or remove to run without chat functionality
+OPENAI_API_KEY=your_openai_api_key_here
 ```
 
 ### Instalação
@@ -177,17 +193,66 @@ http://localhost:3000/api/docs
 |--------|------|-----------|
 | `GET` | `/api/health` | Verifica status da API |
 
-#### Personagens
+#### Personagens (Characters)
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/characters` | Lista todos os personagens |
-| `GET` | `/api/characters/:id` | Busca personagem por ID |
-| `POST` | `/api/characters` | Cria novo personagem |
-| `PUT` | `/api/characters/:id` | Atualiza personagem |
-| `DELETE` | `/api/characters/:id` | Remove personagem |
-| `GET` | `/api/characters/search` | Pesquisa personagens |
-| `POST` | `/api/characters/sync` | Sincroniza com API externa |
+| `GET` | `/api/characters` | Lista personagens com filtros |
+| `GET` | `/api/characters/:id` | Busca por ID único ou múltiplos (IDs separados por vírgula) |
+
+**Filtros disponíveis**: `name`, `status`, `species`, `gender`, `page`
+
+#### Favoritos (Favorites)
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `GET` | `/api/favorites` | Lista todos os favoritos com paginação |
+| `GET` | `/api/favorites/ids` | Retorna apenas IDs dos favoritos |
+| `GET` | `/api/favorites/check/:characterId` | Verifica se personagem está favoritado |
+| `POST` | `/api/favorites` | Adiciona personagem aos favoritos |
+| `DELETE` | `/api/favorites/:characterId` | Remove personagem dos favoritos |
+
+**Parâmetros de paginação**: `page`, `limit`, `search`, `sortBy`, `order`
+
+#### Episódios (Episodes)
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `GET` | `/api/episodes` | Lista episódios com filtros |
+| `GET` | `/api/episodes/:id` | Busca por ID único ou múltiplos |
+
+**Filtros disponíveis**: `name`, `episode`, `page`
+
+#### Localizações (Locations)
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `GET` | `/api/locations` | Lista localizações com filtros |
+| `GET` | `/api/locations/:id` | Busca por ID único ou múltiplos |
+
+**Filtros disponíveis**: `name`, `type`, `dimension`, `page`
+
+#### Chat com IA (Chat)
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `POST` | `/api/chat` | Conversa com Rick ou Morty usando IA |
+
+**Importante**: Requer `OPENAI_API_KEY` configurada no `.env`
+
+**Exemplo de requisição**:
+```json
+{
+  "message": "Quem é você?",
+  "character": "rick",
+  "history": [
+    { "role": "user", "content": "Oi!" },
+    { "role": "assistant", "content": "*arroto* Oi, eu sou o Rick!" }
+  ]
+}
+```
+
+**Personagens disponíveis**: `rick` (cínico e genial) ou `morty` (nervoso e ansioso)
 
 ### Exemplo de Requisição
 
@@ -198,8 +263,21 @@ curl http://localhost:3000/api/characters
 # Buscar por ID
 curl http://localhost:3000/api/characters/1
 
-# Pesquisar
-curl "http://localhost:3000/api/characters/search?name=rick&status=alive"
+# Buscar múltiplos personagens
+curl http://localhost:3000/api/characters/1,2,3
+
+# Filtrar personagens
+curl "http://localhost:3000/api/characters?name=rick&status=alive"
+
+# Adicionar aos favoritos
+curl -X POST http://localhost:3000/api/favorites \
+  -H "Content-Type: application/json" \
+  -d '{"characterId": 1}'
+
+# Chat com Rick
+curl -X POST http://localhost:3000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Oi Rick!", "character": "rick"}'
 ```
 
 ### Exemplo de Resposta
@@ -238,7 +316,8 @@ O backend segue uma arquitetura em camadas:
 ```
 Request → Routes → Controllers → Services → Repositories → Database
                                     ↓
-                              External API
+                              External APIs
+                          (Rick & Morty API, OpenAI)
 ```
 
 ### Camadas
@@ -247,16 +326,27 @@ Request → Routes → Controllers → Services → Repositories → Database
 |--------|------------------|
 | **Routes** | Definição de rotas e middlewares |
 | **Controllers** | Tratamento de requisições HTTP |
-| **Services** | Lógica de negócio |
-| **Repositories** | Acesso ao banco de dados |
+| **Services** | Lógica de negócio e integração com APIs externas |
+| **Repositories** | Acesso ao banco de dados MongoDB |
 | **Models** | Schemas do Mongoose |
+
+### Recursos Principais
+
+- **Rick and Morty API Integration**: Integração completa com a API oficial
+- **Favorites System**: Gerenciamento de favoritos com MongoDB
+- **AI-Powered Chat**: Chat interativo com Rick e Morty usando OpenAI GPT
+- **Caching**: Cache em memória para otimizar chamadas à API externa
+- **Swagger Documentation**: Documentação interativa completa da API
+- **Error Handling**: Tratamento centralizado de erros
+- **Validation**: Validação de entrada com Zod
 
 ### Padrões Utilizados
 
 - **Repository Pattern**: Abstração do acesso a dados
 - **Service Layer**: Encapsulamento da lógica de negócio
+- **Singleton Pattern**: Para serviços e controllers
 - **Error Handling**: Tratamento centralizado de erros
-- **Validation**: Validação com Zod
+- **Input Validation**: Validação com Zod
 
 ---
 

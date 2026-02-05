@@ -10,7 +10,7 @@ const options: swaggerJsdoc.Options = {
     info: {
       title: 'Rick and Morty Catalog API',
       version: '1.0.0',
-      description: 'API for managing Rick and Morty character favorites',
+      description: 'API for browsing Rick and Morty characters, episodes, locations, managing favorites, and chatting with AI-powered characters',
       contact: {
         name: 'API Support',
       },
@@ -48,6 +48,30 @@ const options: swaggerJsdoc.Options = {
             },
             image: { type: 'string', example: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg' },
             episode: { type: 'array', items: { type: 'string' } },
+            url: { type: 'string' },
+            created: { type: 'string', format: 'date-time' },
+          },
+        },
+        Episode: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            name: { type: 'string', example: 'Pilot' },
+            air_date: { type: 'string', example: 'December 2, 2013' },
+            episode: { type: 'string', example: 'S01E01' },
+            characters: { type: 'array', items: { type: 'string' } },
+            url: { type: 'string' },
+            created: { type: 'string', format: 'date-time' },
+          },
+        },
+        Location: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            name: { type: 'string', example: 'Earth (C-137)' },
+            type: { type: 'string', example: 'Planet' },
+            dimension: { type: 'string', example: 'Dimension C-137' },
+            residents: { type: 'array', items: { type: 'string' } },
             url: { type: 'string' },
             created: { type: 'string', format: 'date-time' },
           },

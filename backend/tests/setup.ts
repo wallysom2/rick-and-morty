@@ -1,13 +1,13 @@
 import { beforeAll, afterAll, beforeEach } from 'vitest';
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-
-let mongoServer: MongoMemoryServer;
 
 beforeAll(async () => {
-  // Start in-memory MongoDB
-  mongoServer = await MongoMemoryServer.create();
-  const mongoUri = mongoServer.getUri();
+  // Use MongoDB instance from global setup
+  const mongoUri = process.env.MONGO_URI_TEST;
+  
+  if (!mongoUri) {
+    throw new Error('MONGO_URI_TEST not set - global setup may have failed');
+  }
 
   // Set environment variables for tests
   process.env.NODE_ENV = 'test';
@@ -29,5 +29,4 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await mongoose.disconnect();
-  await mongoServer.stop();
 });
