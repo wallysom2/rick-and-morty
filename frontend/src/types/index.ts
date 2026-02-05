@@ -30,6 +30,7 @@ export interface Episode {
   air_date: string;
   episode: string; // Format: S01E01
   characters: string[];
+  charactersCount?: number;
   url: string;
   created: string;
 }
@@ -41,6 +42,7 @@ export interface Location {
   type: string;
   dimension: string;
   residents: string[];
+  residentsCount?: number;
   url: string;
   created: string;
 }
