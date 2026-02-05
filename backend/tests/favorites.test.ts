@@ -20,6 +20,77 @@ describe('Favorites API', () => {
         pages: 0,
       });
     });
+
+    it('should support custom pagination limit', async () => {
+      // Add some favorites first
+      await request(app).post('/api/favorites').send({ characterId: 1 });
+      await request(app).post('/api/favorites').send({ characterId: 2 });
+      await request(app).post('/api/favorites').send({ characterId: 3 });
+
+      const response = await request(app)
+        .get('/api/favorites?limit=2')
+        .expect(200);
+
+      expect(response.body.data.length).toBe(2);
+      expect(response.body.pagination.limit).toBe(2);
+      expect(response.body.pagination.total).toBe(3);
+    });
+
+    it('should support pagination with page parameter', async () => {
+      // Add favorites
+      await request(app).post('/api/favorites').send({ characterId: 1 });
+      await request(app).post('/api/favorites').send({ characterId: 2 });
+      await request(app).post('/api/favorites').send({ characterId: 3 });
+
+      const page1 = await request(app)
+        .get('/api/favorites?limit=2&page=1')
+        .expect(200);
+
+      const page2 = await request(app)
+        .get('/api/favorites?limit=2&page=2')
+        .expect(200);
+
+      expect(page1.body.data.length).toBe(2);
+      expect(page2.body.data.length).toBe(1);
+      expect(page1.body.data[0]._id).not.toBe(page2.body.data[0]._id);
+    });
+
+    it('should search favorites by name', async () => {
+      await request(app).post('/api/favorites').send({ characterId: 1 }); // Rick Sanchez
+      await request(app).post('/api/favorites').send({ characterId: 2 }); // Morty Smith
+
+      const response = await request(app)
+        .get('/api/favorites?search=rick')
+        .expect(200);
+
+      expect(response.body.data.length).toBe(1);
+      expect(response.body.data[0].name).toContain('Rick');
+    });
+
+    it('should sort favorites by name ascending', async () => {
+      await request(app).post('/api/favorites').send({ characterId: 2 }); // Morty
+      await request(app).post('/api/favorites').send({ characterId: 1 }); // Rick
+
+      const response = await request(app)
+        .get('/api/favorites?sortBy=name&order=asc')
+        .expect(200);
+
+      expect(response.body.data[0].name).toContain('Morty');
+      expect(response.body.data[1].name).toContain('Rick');
+    });
+
+    it('should sort favorites by createdAt descending (default)', async () => {
+      await request(app).post('/api/favorites').send({ characterId: 1 });
+      await request(app).post('/api/favorites').send({ characterId: 2 });
+
+      const response = await request(app)
+        .get('/api/favorites?sortBy=createdAt&order=desc')
+        .expect(200);
+
+      // Most recent should be first
+      expect(response.body.data[0].characterId).toBe(2);
+      expect(response.body.data[1].characterId).toBe(1);
+    });
   });
 
   describe('GET /api/favorites/ids', () => {

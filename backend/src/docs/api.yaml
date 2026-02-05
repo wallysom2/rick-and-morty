@@ -254,3 +254,213 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /episodes:
+    get:
+      summary: List all episodes
+      description: Get a paginated list of episodes from Rick and Morty API
+      tags: [Episodes]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - name: name
+          in: query
+          schema:
+            type: string
+          description: Filter by episode name
+        - name: episode
+          in: query
+          schema:
+            type: string
+          description: Filter by episode code (e.g., S01E01)
+      responses:
+        200:
+          description: List of episodes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Episode'
+
+  /episodes/{id}:
+    get:
+      summary: Get episode by ID or multiple episodes
+      description: Get a single episode or multiple episodes by comma-separated IDs
+      tags: [Episodes]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Episode ID or comma-separated IDs (e.g., 1 or 1,2,3)
+      responses:
+        200:
+          description: Episode details or array of episodes
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Episode'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Episode'
+        404:
+          description: Episode not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /locations:
+    get:
+      summary: List all locations
+      description: Get a paginated list of locations from Rick and Morty API
+      tags: [Locations]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - name: name
+          in: query
+          schema:
+            type: string
+          description: Filter by location name
+        - name: type
+          in: query
+          schema:
+            type: string
+          description: Filter by location type
+        - name: dimension
+          in: query
+          schema:
+            type: string
+          description: Filter by dimension
+      responses:
+        200:
+          description: List of locations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Location'
+
+  /locations/{id}:
+    get:
+      summary: Get location by ID or multiple locations
+      description: Get a single location or multiple locations by comma-separated IDs
+      tags: [Locations]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Location ID or comma-separated IDs (e.g., 1 or 1,2,3)
+      responses:
+        200:
+          description: Location details or array of locations
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Location'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Location'
+        404:
+          description: Location not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chat:
+    post:
+      summary: Chat with Rick or Morty
+      description: Send a message to chat with Rick Sanchez or Morty Smith using AI (requires OPENAI_API_KEY)
+      tags: [Chat]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+                - character
+              properties:
+                message:
+                  type: string
+                  description: The user's message
+                  maxLength: 1000
+                  example: "Quem é você?"
+                character:
+                  type: string
+                  enum: [rick, morty]
+                  description: Which character to chat with
+                  example: "rick"
+                history:
+                  type: array
+                  description: Previous conversation messages (max 20, optional)
+                  maxItems: 20
+                  items:
+                    type: object
+                    required:
+                      - role
+                      - content
+                    properties:
+                      role:
+                        type: string
+                        enum: [user, assistant]
+                        description: Message sender role
+                      content:
+                        type: string
+                        description: Message content
+      responses:
+        200:
+          description: Chat response from the character
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: The character's response
+                    example: "*arroto* Oi, eu sou o Rick Sanchez, o cientista mais inteligente do multiverso!"
+                  character:
+                    type: string
+                    enum: [rick, morty]
+                    example: "rick"
+        400:
+          description: Invalid request (validation error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Server error or chat feature disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

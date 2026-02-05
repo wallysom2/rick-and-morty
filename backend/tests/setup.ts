@@ -2,10 +2,10 @@ import { beforeAll, afterAll, beforeEach } from 'vitest';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
-let mongoServer: MongoMemoryServer;
+let mongoServer: MongoMemoryServer | null = null;
 
 beforeAll(async () => {
-  // Start in-memory MongoDB
+  // Start in-memory MongoDB with increased timeout
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
 
@@ -17,7 +17,7 @@ beforeAll(async () => {
   process.env.LOG_LEVEL = 'silent';
 
   await mongoose.connect(mongoUri);
-});
+}, 60000); // 60 second timeout for downloading MongoDB binary
 
 beforeEach(async () => {
   // Clear all collections before each test
@@ -29,5 +29,7 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await mongoose.disconnect();
-  await mongoServer.stop();
+  if (mongoServer) {
+    await mongoServer.stop();
+  }
 });
