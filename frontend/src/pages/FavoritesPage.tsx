@@ -8,123 +8,10 @@ import {
   Pagination,
   SkeletonList,
   ErrorState,
-  FavoriteButton,
+  CharacterCard, // Import shared component
 } from '../components';
 import { useFavorites, useToggleFavorite, useDebounce } from '../hooks';
-import type { Favorite } from '../types';
-
-const statusConfig: Record<string, { 
-  color: string; 
-  glow: string; 
-  label: string;
-}> = {
-  Alive: { 
-    color: 'bg-[var(--status-alive)]', 
-    glow: 'status-alive',
-    label: 'Vivo'
-  },
-  Dead: { 
-    color: 'bg-[var(--status-dead)]', 
-    glow: 'status-dead',
-    label: 'Morto'
-  },
-  unknown: { 
-    color: 'bg-[var(--status-unknown)]', 
-    glow: 'status-unknown',
-    label: 'Desconhecido'
-  },
-};
-
-interface FavoriteCardProps {
-  favorite: Favorite;
-  onRemove: () => void;
-  isRemoving: boolean;
-}
-
-function FavoriteCard({ favorite, onRemove, isRemoving }: FavoriteCardProps) {
-  const status = statusConfig[favorite.status] || statusConfig.unknown;
-  
-  return (
-    <div 
-      className="group relative rounded-2xl overflow-hidden card-hover"
-      style={{ 
-        background: 'linear-gradient(180deg, var(--space-medium) 0%, var(--space-dark) 100%)'
-      }}
-    >
-      {/* Glow border on hover */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{
-          background: 'linear-gradient(135deg, var(--dimension-pink), var(--status-dead), var(--dimension-purple))',
-          padding: '2px',
-          mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-          maskComposite: 'xor',
-          WebkitMaskComposite: 'xor'
-        }}
-      />
-      
-      {/* Favorite accent at top */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--dimension-pink)] to-[var(--status-dead)]" />
-
-      {/* Image */}
-      <div className="relative aspect-square overflow-hidden">
-        <img
-          src={favorite.image}
-          alt={favorite.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          loading="lazy"
-        />
-        
-        {/* Image overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--space-dark)] via-transparent to-transparent opacity-60" />
-        
-        {/* Favorite button */}
-        <div className="absolute top-3 right-3">
-          <FavoriteButton
-            isFavorite={true}
-            onToggle={onRemove}
-            isLoading={isRemoving}
-            size="md"
-          />
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-3 sm:p-4">
-        {/* Name */}
-        <h3 
-          className="text-base sm:text-lg font-bold text-white truncate mb-2 group-hover:text-[var(--dimension-pink)] transition-colors duration-300" 
-          title={favorite.name}
-        >
-          {favorite.name}
-        </h3>
-
-        {/* Status */}
-        <div className="flex items-center space-x-2 mb-2">
-          <span className={`w-2.5 h-2.5 rounded-full ${status.glow}`} />
-          <span className="text-xs sm:text-sm font-medium" style={{ 
-            color: favorite.status === 'Alive' ? 'var(--status-alive)' 
-              : favorite.status === 'Dead' ? 'var(--status-dead)' 
-              : 'var(--status-unknown)' 
-          }}>
-            {status.label}
-          </span>
-          <span className="text-[var(--text-muted)]">•</span>
-          <span className="text-xs sm:text-sm text-[var(--text-secondary)]">{favorite.species}</span>
-        </div>
-
-        {/* Added date */}
-        <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
-          <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span className="text-xs sm:text-sm">
-            {new Date(favorite.createdAt).toLocaleDateString('pt-BR')}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
+import type { Character } from '../types';
 
 const sortByOptions = [
   { value: 'createdAt', label: 'Data' },
@@ -354,14 +241,34 @@ export function FavoritesPage() {
       ) : (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
-            {favorites.map((favorite) => (
-              <FavoriteCard
-                key={favorite._id}
-                favorite={favorite}
-                onRemove={() => toggle(favorite.characterId, true)}
-                isRemoving={isToggling}
-              />
-            ))}
+            {favorites.map((favorite) => {
+              // Map favorite to character structure for the card
+              // Note: Favorites only store basic info, so we provide defaults for missing fields
+              const character: Character = {
+                id: favorite.characterId,
+                name: favorite.name,
+                status: favorite.status,
+                species: favorite.species,
+                type: favorite.type || '',
+                gender: favorite.gender || 'unknown',
+                origin: favorite.origin || { name: 'Desconhecido', url: '' },
+                location: favorite.location || { name: 'Desconhecido', url: '' },
+                image: favorite.image,
+                episode: favorite.episode || [],
+                url: favorite.url || '',
+                created: favorite.createdAt,
+              };
+
+              return (
+                <CharacterCard
+                  key={favorite._id}
+                  character={character}
+                  isFavorite={true}
+                  onToggleFavorite={() => toggle(favorite.characterId, true)}
+                  isToggling={isToggling}
+                />
+              );
+            })}
           </div>
 
           {/* Pagination */}
