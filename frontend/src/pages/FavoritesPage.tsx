@@ -3,126 +3,20 @@ import { Link } from 'react-router-dom';
 import {
   Container,
   SearchBar,
+  FilterSelect,
+  ActiveFilters,
   Pagination,
   SkeletonList,
   ErrorState,
-  FavoriteButton,
+  CharacterCard, // Import shared component
 } from '../components';
 import { useFavorites, useToggleFavorite, useDebounce } from '../hooks';
-import type { Favorite } from '../types';
+import type { Character } from '../types';
 
-const statusConfig: Record<string, { 
-  color: string; 
-  glow: string; 
-  label: string;
-}> = {
-  Alive: { 
-    color: 'bg-[var(--status-alive)]', 
-    glow: 'status-alive',
-    label: 'Vivo'
-  },
-  Dead: { 
-    color: 'bg-[var(--status-dead)]', 
-    glow: 'status-dead',
-    label: 'Morto'
-  },
-  unknown: { 
-    color: 'bg-[var(--status-unknown)]', 
-    glow: 'status-unknown',
-    label: 'Desconhecido'
-  },
-};
-
-interface FavoriteCardProps {
-  favorite: Favorite;
-  onRemove: () => void;
-  isRemoving: boolean;
-}
-
-function FavoriteCard({ favorite, onRemove, isRemoving }: FavoriteCardProps) {
-  const status = statusConfig[favorite.status] || statusConfig.unknown;
-  
-  return (
-    <div 
-      className="group relative rounded-2xl overflow-hidden card-hover"
-      style={{ 
-        background: 'linear-gradient(180deg, var(--space-medium) 0%, var(--space-dark) 100%)'
-      }}
-    >
-      {/* Glow border on hover */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{
-          background: 'linear-gradient(135deg, var(--dimension-pink), var(--status-dead), var(--dimension-purple))',
-          padding: '2px',
-          mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-          maskComposite: 'xor',
-          WebkitMaskComposite: 'xor'
-        }}
-      />
-      
-      {/* Favorite accent at top */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--dimension-pink)] to-[var(--status-dead)]" />
-
-      {/* Image */}
-      <div className="relative aspect-square overflow-hidden">
-        <img
-          src={favorite.image}
-          alt={favorite.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          loading="lazy"
-        />
-        
-        {/* Image overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--space-dark)] via-transparent to-transparent opacity-60" />
-        
-        {/* Favorite button */}
-        <div className="absolute top-3 right-3">
-          <FavoriteButton
-            isFavorite={true}
-            onToggle={onRemove}
-            isLoading={isRemoving}
-            size="md"
-          />
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-3 sm:p-4">
-        {/* Name */}
-        <h3 
-          className="text-base sm:text-lg font-bold text-white truncate mb-2 group-hover:text-[var(--dimension-pink)] transition-colors duration-300" 
-          title={favorite.name}
-        >
-          {favorite.name}
-        </h3>
-
-        {/* Status */}
-        <div className="flex items-center space-x-2 mb-2">
-          <span className={`w-2.5 h-2.5 rounded-full ${status.glow}`} />
-          <span className="text-xs sm:text-sm font-medium" style={{ 
-            color: favorite.status === 'Alive' ? 'var(--status-alive)' 
-              : favorite.status === 'Dead' ? 'var(--status-dead)' 
-              : 'var(--status-unknown)' 
-          }}>
-            {status.label}
-          </span>
-          <span className="text-[var(--text-muted)]">•</span>
-          <span className="text-xs sm:text-sm text-[var(--text-secondary)]">{favorite.species}</span>
-        </div>
-
-        {/* Added date */}
-        <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
-          <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span className="text-xs sm:text-sm">
-            {new Date(favorite.createdAt).toLocaleDateString('pt-BR')}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
+const sortByOptions = [
+  { value: 'createdAt', label: 'Data' },
+  { value: 'name', label: 'Nome' },
+];
 
 export function FavoritesPage() {
   const [search, setSearch] = useState('');
@@ -134,6 +28,18 @@ export function FavoritesPage() {
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
+    setPage(1);
+  };
+
+  const handleSortByChange = (value: string) => {
+    setSortBy(value as 'createdAt' | 'name');
+    setPage(1);
+  };
+
+  const handleClearFilters = () => {
+    setSearch('');
+    setSortBy('createdAt');
+    setOrder('desc');
     setPage(1);
   };
 
@@ -150,6 +56,28 @@ export function FavoritesPage() {
   const favorites = data?.data || [];
   const pagination = data?.pagination || { total: 0, page: 1, limit: 12, pages: 0 };
 
+  // Build active filters
+  const activeFilters = [];
+  if (search) {
+    activeFilters.push({
+      label: `Busca: ${search}`,
+      value: search,
+      onClear: () => setSearch(''),
+    });
+  }
+  if (sortBy !== 'createdAt' || order !== 'desc') {
+    const sortLabel = sortByOptions.find(s => s.value === sortBy)?.label || sortBy;
+    const orderLabel = order === 'asc' ? 'Crescente' : 'Decrescente';
+    activeFilters.push({
+      label: `${sortLabel} (${orderLabel})`,
+      value: `${sortBy}-${order}`,
+      onClear: () => {
+        setSortBy('createdAt');
+        setOrder('desc');
+      },
+    });
+  }
+
   return (
     <Container>
       {/* Page Header */}
@@ -157,11 +85,8 @@ export function FavoritesPage() {
         <div className="flex items-center gap-3 mb-2">
           <div className="relative">
             <div className="w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--dimension-pink)] to-[var(--status-dead)]" />
-            <div className="absolute inset-0 w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--dimension-pink)] to-[var(--status-dead)] blur-sm" />
           </div>
-          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--dimension-pink)]"
-            style={{ textShadow: '0 0 20px var(--dimension-pink), 0 0 40px var(--dimension-pink)' }}
-          >
+          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--dimension-pink)]">
             Meus Favoritos
           </h1>
         </div>
@@ -173,7 +98,7 @@ export function FavoritesPage() {
         </p>
       </div>
 
-      {/* Filters */}
+      {/* Filters Section */}
       <div className="mb-6 sm:mb-8 space-y-4">
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1">
@@ -183,37 +108,55 @@ export function FavoritesPage() {
               placeholder="Buscar favoritos..."
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 sm:gap-3">
             {/* Sort by select */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'createdAt' | 'name')}
-              className="
-                flex-1 sm:flex-none px-4 py-3 rounded-xl
-                bg-[var(--space-medium)] border-2 border-[var(--space-light)]
-                text-[var(--text-primary)] text-sm sm:text-base
-                focus:outline-none focus:border-[var(--dimension-pink)]
-                transition-all duration-300 cursor-pointer
-              "
-            >
-              <option value="createdAt">Data</option>
-              <option value="name">Nome</option>
-            </select>
+            <div className="flex-1 sm:w-36">
+              <FilterSelect
+                value={sortBy}
+                onChange={handleSortByChange}
+                options={sortByOptions}
+                placeholder="Ordenar"
+                accentColor="var(--dimension-pink)"
+                ariaLabel="Ordenar por"
+                icon={
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                  </svg>
+                }
+              />
+            </div>
             
             {/* Order button */}
             <button
               onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
               className="
+                relative group
                 px-4 py-3 rounded-xl
-                bg-[var(--space-medium)] border-2 border-[var(--space-light)]
+                bg-[var(--space-medium)]
+                border-2 border-[var(--space-light)]
                 text-[var(--text-primary)]
-                hover:border-[var(--dimension-pink)] hover:text-[var(--dimension-pink)]
+                hover:border-[var(--dimension-pink)]
+                hover:text-[var(--dimension-pink)]
+                focus:outline-none
                 transition-all duration-300
               "
-              title={order === 'asc' ? 'Crescente' : 'Decrescente'}
+              title={order === 'asc' ? 'Ordem Crescente' : 'Ordem Decrescente'}
+              style={{
+                borderColor: order !== 'desc' ? 'var(--dimension-pink)' : 'var(--space-light)',
+                color: order !== 'desc' ? 'var(--dimension-pink)' : 'var(--text-primary)',
+              }}
             >
+              {/* Glow effect on active */}
+              {order !== 'desc' && (
+                <div 
+                  className="absolute -inset-0.5 rounded-xl opacity-50 blur transition-opacity duration-300"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--dimension-pink), var(--status-dead))',
+                  }}
+                />
+              )}
               <svg 
-                className={`w-5 h-5 transition-transform duration-300 ${order === 'asc' ? 'rotate-180' : ''}`} 
+                className={`relative w-5 h-5 transition-transform duration-300 ${order === 'asc' ? 'rotate-180' : ''}`} 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -223,6 +166,13 @@ export function FavoritesPage() {
             </button>
           </div>
         </div>
+
+        {/* Active Filters */}
+        <ActiveFilters 
+          filters={activeFilters}
+          onClearAll={handleClearFilters}
+          accentColor="var(--dimension-pink)"
+        />
       </div>
 
       {/* Content */}
@@ -258,43 +208,67 @@ export function FavoritesPage() {
           </div>
           
           <h3 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)] mb-2 text-center">
-            Nenhum favorito ainda
+            Nenhum favorito {search ? 'encontrado' : 'ainda'}
           </h3>
           <p className="text-sm sm:text-base text-[var(--text-muted)] mb-8 text-center max-w-md">
-            Comece a explorar o multiverso e adicione personagens ao seu portal pessoal!
+            {search 
+              ? 'Tente ajustar sua busca para encontrar outros favoritos'
+              : 'Comece a explorar o multiverso e adicione personagens ao seu portal pessoal!'}
           </p>
           
-          <Link
-            to="/"
-            className="
-              group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold
-              bg-gradient-to-r from-[var(--portal-green)] to-[var(--portal-cyan)]
-              text-[var(--space-black)]
-              transition-all duration-300
-              hover:shadow-[0_0_30px_rgba(151,206,76,0.5)]
-              hover:scale-105
-              active:scale-95
-            "
-          >
-            <span className="flex items-center gap-2 sm:gap-3">
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              Explorar Personagens
-            </span>
-          </Link>
+          {!search && (
+            <Link
+              to="/"
+              className="
+                group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold
+                bg-gradient-to-r from-[var(--portal-green)] to-[var(--portal-cyan)]
+                text-[var(--space-black)]
+                transition-all duration-300
+                hover:shadow-[0_0_30px_rgba(151,206,76,0.5)]
+                hover:scale-105
+                active:scale-95
+              "
+            >
+              <span className="flex items-center gap-2 sm:gap-3">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Explorar Personagens
+              </span>
+            </Link>
+          )}
         </div>
       ) : (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
-            {favorites.map((favorite) => (
-              <FavoriteCard
-                key={favorite._id}
-                favorite={favorite}
-                onRemove={() => toggle(favorite.characterId, true)}
-                isRemoving={isToggling}
-              />
-            ))}
+            {favorites.map((favorite) => {
+              // Map favorite to character structure for the card
+              // Note: Favorites only store basic info, so we provide defaults for missing fields
+              const character: Character = {
+                id: favorite.characterId,
+                name: favorite.name,
+                status: favorite.status,
+                species: favorite.species,
+                type: '',
+                gender: 'unknown',
+                origin: { name: 'Desconhecido', url: '' },
+                location: { name: 'Desconhecido', url: '' },
+                image: favorite.image,
+                episode: [],
+                url: '',
+                created: favorite.createdAt,
+              };
+
+              return (
+                <CharacterCard
+                  key={favorite._id}
+                  character={character}
+                  isFavorite={true}
+                  onToggleFavorite={() => toggle(favorite.characterId, true)}
+                  isToggling={isToggling}
+                />
+              );
+            })}
           </div>
 
           {/* Pagination */}

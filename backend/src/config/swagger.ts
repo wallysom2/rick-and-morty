@@ -1,4 +1,8 @@
 import swaggerJsdoc from 'swagger-jsdoc';
+import path from 'path';
+
+// Resolve path to docs - works in both dev (src/) and prod (dist/)
+const docsPath = path.join(process.cwd(), 'src/docs/*.yaml');
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -84,7 +88,7 @@ const options: swaggerJsdoc.Options = {
       },
     },
   },
-  apis: ['./src/routes/*.ts', './src/docs/*.yaml'],
+  apis: [docsPath],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

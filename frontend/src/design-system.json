@@ -1,0 +1,58 @@
+{
+  "name": "Wubba Lubba Dub Dub DB",
+  "version": "1.0.0",
+  
+  "colors": {
+    "primary": {
+      "green": "#00ff88",
+      "greenDark": "#00cc6a",
+      "greenLight": "#4dffaa"
+    },
+    "background": {
+      "main": "#0d1117",
+      "card": "#161b22",
+      "cardHover": "#1c2128",
+      "terminal": "#0f1318",
+      "terminalHeader": "#1a1f26"
+    },
+    "text": {
+      "primary": "#ffffff",
+      "secondary": "#8b949e",
+      "muted": "#6e7681",
+      "accent": "#00ff88"
+    },
+    "status": {
+      "alive": "#00ff88",
+      "dead": "#ff4757",
+      "unknown": "#8b949e"
+    },
+    "border": {
+      "default": "#30363d",
+      "hover": "#00ff88",
+      "terminal": "#30363d"
+    },
+    "accent": {
+      "yellow": "#ffc107",
+      "red": "#ff4757",
+      "portal": "#00ff88"
+    }
+  },
+  
+  "typography": {
+    "fontFamily": {
+      "heading": "'Space Grotesk', sans-serif",
+      "body": "'Inter', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    }
+  },
+  
+  "components": {
+    "terminalCard": {
+      "dots": {
+        "red": "#ff5f57",
+        "yellow": "#febc2e",
+        "green": "#28c840"
+      }
+    }
+  }
+}

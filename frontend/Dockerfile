@@ -6,26 +6,30 @@ WORKDIR /app
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy workspace config and lock file from root
+COPY pnpm-workspace.yaml pnpm-lock.yaml ./
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Copy frontend package.json
+COPY frontend/package.json ./frontend/
 
-# Copy source code
-COPY . .
+# Install dependencies for frontend only
+RUN pnpm install --frozen-lockfile --filter=frontend
+
+# Copy frontend source code
+COPY frontend/ ./frontend/
 
 # Build for production
+WORKDIR /app/frontend
 RUN pnpm run build
 
 # Production stage - serve with nginx
 FROM nginx:alpine AS production
 
 # Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built files from builder
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/frontend/dist /usr/share/nginx/html
 
 # Expose port
 EXPOSE 80

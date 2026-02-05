@@ -1,0 +1,38 @@
+# Dependencies (will be installed in Docker)
+**/node_modules
+
+# Build outputs
+**/dist
+**/build
+
+# Environment files
+.env
+.env.local
+**/.env
+**/.env.local
+
+# Logs
+*.log
+**/*.log
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# Test and coverage
+**/coverage
+**/.nyc_output
+**/tests
+**/*.test.ts
+**/*.test.tsx
+**/vitest.config.ts
+
+# Documentation (not needed for build)
+*.md
+
+# Docker files (prevent recursive copy)
+docker-compose*.yml

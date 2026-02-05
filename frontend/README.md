@@ -1,73 +1,251 @@
-# React + TypeScript + Vite
+# 🎨 Rick and Morty - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web moderna para visualizar e explorar personagens da série Rick and Morty.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📋 Índice
 
-## React Compiler
+- [Tecnologias](#-tecnologias)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [Configuração](#-configuração)
+- [Scripts](#-scripts)
+- [Componentes](#-componentes)
+- [Estilização](#-estilização)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tecnologias
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Tecnologia | Versão | Descrição |
+|------------|--------|-----------|
+| **React** | 19.2.0 | Biblioteca para construção de interfaces |
+| **Vite** | 7.2.4 | Build tool e dev server |
+| **TypeScript** | 5.9.3 | Tipagem estática |
+| **TailwindCSS** | 4.1.18 | Framework CSS utilitário |
+| **React Router DOM** | 7.13.0 | Roteamento SPA |
+| **TanStack Query** | 5.90.20 | Gerenciamento de estado do servidor |
+| **Axios** | 1.13.4 | Cliente HTTP |
+| **React Hot Toast** | 2.6.0 | Notificações toast |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 📁 Estrutura do Projeto
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+frontend/
+├── 📂 public/              # Arquivos estáticos
+│   └── favicon/
+│
+├── 📂 src/
+│   ├── 📂 assets/          # Imagens e recursos
+│   │
+│   ├── 📂 components/      # Componentes reutilizáveis
+│   │   ├── CharacterCard/
+│   │   ├── CharacterList/
+│   │   ├── Header/
+│   │   ├── Loading/
+│   │   └── ...
+│   │
+│   ├── 📂 hooks/           # Custom hooks
+│   │   ├── useCharacters.ts
+│   │   ├── useFavorites.ts
+│   │   └── ...
+│   │
+│   ├── 📂 pages/           # Páginas da aplicação
+│   │   ├── Home/
+│   │   ├── CharacterDetail/
+│   │   └── Favorites/
+│   │
+│   ├── 📂 services/        # Comunicação com API
+│   │   └── api.ts
+│   │
+│   ├── 📂 types/           # Definições TypeScript
+│   │   └── character.ts
+│   │
+│   ├── 📄 App.tsx          # Componente principal
+│   ├── 📄 App.css          # Estilos globais do App
+│   ├── 📄 main.tsx         # Entry point
+│   └── 📄 index.css        # Estilos globais + Tailwind
+│
+├── 📄 index.html           # Template HTML
+├── 📄 vite.config.ts       # Configuração do Vite
+├── 📄 tsconfig.json        # Configuração TypeScript
+├── 📄 tailwind.config.js   # Configuração Tailwind
+├── 📄 package.json         # Dependências e scripts
+└── 📄 README.md            # Este arquivo
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚙️ Configuração
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Variáveis de Ambiente
+
+Crie um arquivo `.env` na pasta `frontend/` baseado no `.env.example`:
+
+```env
+VITE_API_URL=http://localhost:3000/api
 ```
+
+### Instalação
+
+```bash
+# Na raiz do monorepo
+pnpm install
+
+# Ou apenas o frontend
+cd frontend
+pnpm install
+```
+
+---
+
+## 📜 Scripts
+
+Execute a partir da pasta `frontend/`:
+
+| Script | Comando | Descrição |
+|--------|---------|-----------|
+| **Dev** | `pnpm dev` | Inicia o servidor de desenvolvimento |
+| **Build** | `pnpm build` | Compila para produção |
+| **Preview** | `pnpm preview` | Visualiza a build de produção |
+| **Lint** | `pnpm lint` | Verifica erros de linting |
+
+### Executando
+
+```bash
+# Desenvolvimento (porta 5173)
+pnpm dev
+
+# Build de produção
+pnpm build
+
+# Visualizar build
+pnpm preview
+```
+
+---
+
+## 🧩 Componentes
+
+### Componentes Principais
+
+| Componente | Descrição |
+|------------|-----------|
+| `CharacterCard` | Card individual de personagem |
+| `CharacterList` | Lista de cards de personagens |
+| `CharacterDetail` | Detalhes completos de um personagem |
+| `Header` | Navegação principal |
+| `Loading` | Indicadores de carregamento |
+| `SearchBar` | Barra de pesquisa |
+| `Pagination` | Controles de paginação |
+| `FavoriteButton` | Botão para favoritar |
+
+### Custom Hooks
+
+| Hook | Descrição |
+|------|-----------|
+| `useCharacters` | Busca e gerencia lista de personagens |
+| `useCharacter` | Busca detalhes de um personagem |
+| `useFavorites` | Gerencia personagens favoritos |
+| `useSearch` | Lógica de pesquisa e filtros |
+
+---
+
+## 🎨 Estilização
+
+O projeto utiliza **TailwindCSS v4** para estilização.
+
+### Arquivo Principal
+
+Os estilos globais estão em `src/index.css`:
+
+```css
+@import "tailwindcss";
+
+/* Variáveis customizadas */
+:root {
+  --color-primary: #...;
+  --color-secondary: #...;
+}
+
+/* Estilos globais */
+body {
+  @apply bg-gradient-to-br from-gray-900 to-gray-800;
+}
+```
+
+### Tema Customizado
+
+O tema segue a paleta de cores da série Rick and Morty:
+
+- **Verde Portal**: `#97ce4c`
+- **Azul Espacial**: `#24325f`
+- **Roxo Dimensional**: `#8b5cf6`
+
+---
+
+## 🔧 Configurações
+
+### Vite (`vite.config.ts`)
+
+```typescript
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': 'http://localhost:3000'
+    }
+  }
+})
+```
+
+### TypeScript (`tsconfig.json`)
+
+- **Strict mode** habilitado
+- Path aliases configurados
+- Suporte a React JSX
+
+---
+
+## 🚀 Deploy
+
+### Build de Produção
+
+```bash
+pnpm build
+```
+
+Os arquivos serão gerados em `dist/`.
+
+### Docker
+
+O frontend inclui um `Dockerfile` que:
+1. Compila a aplicação
+2. Serve via Nginx otimizado
+
+```bash
+docker build -t rick-frontend .
+docker run -p 80:80 rick-frontend
+```
+
+---
+
+## 📚 Recursos Adicionais
+
+- [Documentação do React](https://react.dev/)
+- [Documentação do Vite](https://vitejs.dev/)
+- [Documentação do TailwindCSS](https://tailwindcss.com/)
+- [TanStack Query Docs](https://tanstack.com/query/latest)
+
+---
+
+<div align="center">
+  <sub>⬅️ <a href="../README.md">Voltar para o README principal</a></sub>
+</div>

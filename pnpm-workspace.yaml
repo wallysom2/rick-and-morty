@@ -1,0 +1,8 @@
+packages:
+  - frontend
+  - backend
+
+onlyBuiltDependencies:
+  - '@scarf/scarf'
+  - esbuild
+  - mongodb-memory-server

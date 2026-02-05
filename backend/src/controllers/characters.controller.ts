@@ -42,6 +42,23 @@ export class CharactersController {
       next(error);
     }
   }
+
+  async getMultiple(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const idsParam = req.params.id;
+      const ids = idsParam.split(',').map(id => Number(id.trim())).filter(id => !isNaN(id) && id > 0);
+
+      if (ids.length === 0) {
+        res.status(400).json({ error: { message: 'Invalid character IDs', status: 400 } });
+        return;
+      }
+
+      const characters = await rickAndMortyService.getMultipleCharacters(ids);
+      res.json(characters);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const charactersController = new CharactersController();

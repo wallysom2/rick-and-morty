@@ -11,10 +11,35 @@ export function createApp(): Application {
   const app = express();
 
   // Core middlewares
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:4173', // Vite preview
+    env.CORS_ORIGIN,
+  ];
+
   app.use(cors({
-    origin: env.CORS_ORIGIN,
+    origin: (origin, callback) => {
+      // allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:')) {
+        return callback(null, true);
+      }
+      
+      // Allow the specific deployed origin if it matches env
+      if (origin === env.CORS_ORIGIN) {
+        return callback(null, true);
+      }
+
+      return callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }));
+
+  app.options('*', cors()); // Enable pre-flight requests
+
   app.use(express.json());
   app.use(requestLogger);
 
