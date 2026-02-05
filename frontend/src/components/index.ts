@@ -15,3 +15,4 @@ export { Breadcrumb } from './Breadcrumb';
 export { TerminalCard } from './TerminalCard';
 export { PortalImage } from './PortalImage';
 export { StatusBadge } from './StatusBadge';
+export { ChatWidget } from './ChatWidget';

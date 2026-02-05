@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom'
-import { Header, Footer } from './components'
-import { 
-  HomePage, 
-  FavoritesPage, 
-  CharacterPage, 
-  EpisodesPage, 
+import { Header, Footer, ChatWidget } from './components'
+import {
+  HomePage,
+  FavoritesPage,
+  CharacterPage,
+  EpisodesPage,
   EpisodePage,
   LocationsPage,
   LocationPage
@@ -26,8 +26,10 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      <ChatWidget />
     </div>
   )
 }
 
 export default App
+

@@ -1,11 +1,12 @@
+# Docker Compose for Production (AWS Lightsail)
+# Docker Hub username: wallysom2
+
 services:
   # MongoDB Database
   mongodb:
     image: mongo:7
     container_name: rick-mongodb
     restart: unless-stopped
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db
     healthcheck:
@@ -19,18 +20,14 @@ services:
 
   # Backend API
   backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
+    image: wallysom2/rick-and-morty-backend:latest
     container_name: rick-backend
     restart: unless-stopped
-    ports:
-      - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
       - MONGO_URL=mongodb://mongodb:27017/rickandmorty
-      - CORS_ORIGIN=http://localhost
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost}
       - LOG_LEVEL=info
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
@@ -47,9 +44,7 @@ services:
 
   # Frontend (Nginx)
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
+    image: wallysom2/rick-and-morty-frontend:latest
     container_name: rick-frontend
     restart: unless-stopped
     ports:

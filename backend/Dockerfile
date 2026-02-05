@@ -43,6 +43,9 @@ RUN pnpm install --frozen-lockfile --prod --filter=rick-and-morty-backend
 # Copy built files from builder
 COPY --from=builder /app/backend/dist ./backend/dist
 
+# Copy docs (YAML files for Swagger)
+COPY --from=builder /app/backend/src/docs ./backend/src/docs
+
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
