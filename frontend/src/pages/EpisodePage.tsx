@@ -1,21 +1,33 @@
 import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useEpisode, useMultipleCharacters } from '../hooks';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { TerminalCard } from '../components/TerminalCard';
+import { Pagination } from '../components/Pagination';
 
 export function EpisodePage() {
   const { id } = useParams<{ id: string }>();
   const episodeId = Number(id);
+  const [page, setPage] = useState(1);
+  const ITEMS_PER_PAGE = 20;
   
   const { data: episode, isLoading, isError } = useEpisode(episodeId);
+
+  // Reset page when episode changes
+  useEffect(() => {
+    setPage(1);
+  }, [episodeId]);
   
   // Get character IDs from URLs
   const characterIds = episode?.characters?.map(url => {
     const match = url.match(/\/character\/(\d+)/);
     return match ? Number(match[1]) : 0;
   }).filter(id => id > 0) || [];
+
+  const totalPages = Math.ceil(characterIds.length / ITEMS_PER_PAGE);
+  const paginatedIds = characterIds.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   
-  const { data: characters = [] } = useMultipleCharacters(characterIds);
+  const { data: characters = [] } = useMultipleCharacters(paginatedIds);
 
   if (isLoading) {
     return (
@@ -137,6 +149,17 @@ export function EpisodePage() {
                 </Link>
               ))}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                />
+              </div>
+            )}
           </div>
         )}
         
