@@ -185,12 +185,17 @@ export type ChatMessage = {
 export type ChatCharacter = 'rick' | 'morty';
 
 export class ChatService {
-    private openai: OpenAI;
+    private openai: OpenAI | null;
 
     constructor() {
-        this.openai = new OpenAI({
-            apiKey: env.OPENAI_API_KEY,
-        });
+        if (!env.OPENAI_API_KEY) {
+            logger.warn('OPENAI_API_KEY not configured - chat feature will be disabled');
+            this.openai = null;
+        } else {
+            this.openai = new OpenAI({
+                apiKey: env.OPENAI_API_KEY,
+            });
+        }
     }
 
     private getSystemPrompt(character: ChatCharacter): string {
@@ -351,6 +356,11 @@ export class ChatService {
         character: ChatCharacter,
         history: ChatMessage[] = []
     ): Promise<string> {
+        // Check if OpenAI is configured
+        if (!this.openai) {
+            throw new Error('Chat feature is disabled - OPENAI_API_KEY not configured');
+        }
+
         // Build messages array with system prompt and history
         const messages: ChatCompletionMessageParam[] = [
             { role: 'system', content: this.getSystemPrompt(character) },
