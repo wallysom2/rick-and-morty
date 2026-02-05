@@ -6,16 +6,21 @@ WORKDIR /app
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy workspace config and lock file from root
+COPY pnpm-workspace.yaml pnpm-lock.yaml ./
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Copy backend package.json
+COPY backend/package.json ./backend/
 
-# Copy source code
-COPY . .
+# Install ALL dependencies (including devDependencies for build)
+# Use the correct package name from package.json
+RUN pnpm install --frozen-lockfile --filter=rick-and-morty-backend
+
+# Copy backend source code
+COPY backend/ ./backend/
 
 # Build TypeScript
+WORKDIR /app/backend
 RUN pnpm run build
 
 # Production stage
@@ -26,20 +31,25 @@ WORKDIR /app
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy workspace config and lock file from root
+COPY pnpm-workspace.yaml pnpm-lock.yaml ./
+
+# Copy backend package.json
+COPY backend/package.json ./backend/
 
 # Install production dependencies only
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile --prod --filter=rick-and-morty-backend
 
 # Copy built files from builder
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/backend/dist ./backend/dist
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
 USER nodejs
+
+WORKDIR /app/backend
 
 # Expose port
 EXPOSE 3000
