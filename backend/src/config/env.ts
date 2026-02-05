@@ -7,7 +7,7 @@ const envSchema = z.object({
   MONGO_URL: z.string().url().default('mongodb://localhost:27017/rickandmorty'),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-  OPENAI_API_KEY: z.string().min(1, 'OPENAI_API_KEY is required'),
+  OPENAI_API_KEY: z.string().optional(),
 });
 
 function validateEnv() {
