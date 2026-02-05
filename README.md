@@ -1,6 +1,6 @@
-# 🛸 Rick and Morty Character Catalog
-
-![Rick and Morty](https://rickandmortyapi.com/api/character/avatar/1.jpeg)
+<p align="center">
+  <img src="frontend/src/assets/logo.svg" alt="Rick and Morty Logo" width="300"/>
+</p>
 
 Um catálogo interativo de personagens da série Rick and Morty, construído como um **monorepo** com frontend React e backend Node.js.
 
