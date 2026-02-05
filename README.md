@@ -76,6 +76,14 @@ Este comando instalará as dependências de todos os workspaces (frontend e back
 
 #### Opção 1: Executar tudo junto
 
+### Desenvolvimento com Docker (Apenas MongoDB)
+
+Para desenvolvimento local, você pode usar apenas o MongoDB via Docker:
+
+```bash
+docker-compose -f docker-compose.dev.yml up -d
+```
+
 ```bash
 pnpm dev
 ```
@@ -126,14 +134,6 @@ docker-compose down
 | **Frontend** | http://localhost |
 | **Backend API** | http://localhost:3000 |
 | **MongoDB** | localhost:27017 |
-
-### Desenvolvimento com Docker (Apenas MongoDB)
-
-Para desenvolvimento local, você pode usar apenas o MongoDB via Docker:
-
-```bash
-docker-compose -f docker-compose.dev.yml up -d
-```
 
 ---
 
