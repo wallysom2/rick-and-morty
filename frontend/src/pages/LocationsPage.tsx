@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocations, useDebounce } from '../hooks';
-import { Container, SearchBar, FilterSelect, ActiveFilters, Pagination, ErrorState, PageHeader } from '../components';
+import { Container, SearchBar, FilterSelect, Pagination, ErrorState, PageHeader } from '../components';
 import type { Location } from '../types';
 
 const typeIcons = {
@@ -125,35 +125,11 @@ export function LocationsPage() {
     setPage(1);
   };
 
-  const handleClearFilters = () => {
-    setSearch('');
-    setType('');
-    setPage(1);
-  };
-
   const { locations, pagination, isLoading, isError, refetch, prefetchNextPage } = useLocations({
     page,
     name: debouncedSearch || undefined,
     type: type || undefined,
   });
-
-  // Build active filters
-  const activeFilters = [];
-  if (search) {
-    activeFilters.push({
-      label: `Busca: ${search}`,
-      value: search,
-      onClear: () => setSearch(''),
-    });
-  }
-  if (type) {
-    const typeLabel = typeFilters.find(t => t.value === type)?.label || type;
-    activeFilters.push({
-      label: typeLabel,
-      value: type,
-      onClear: () => setType(''),
-    });
-  }
 
   return (
     <Container>
@@ -204,13 +180,6 @@ export function LocationsPage() {
             />
           </div>
         </div>
-
-        {/* Active Filters */}
-        <ActiveFilters
-          filters={activeFilters}
-          onClearAll={handleClearFilters}
-          accentColor="var(--dimension-gold)"
-        />
       </div>
 
       {/* Content */}

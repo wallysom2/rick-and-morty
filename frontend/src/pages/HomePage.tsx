@@ -3,7 +3,6 @@ import {
   Container,
   SearchBar,
   StatusFilter,
-  ActiveFilters,
   CharacterList,
   Pagination,
   SkeletonList,
@@ -12,13 +11,6 @@ import {
 } from '../components';
 import { useCharacters, useFavoriteIds, useDebounce } from '../hooks';
 import type { CharacterStatus } from '../types';
-
-const statusLabels: Record<CharacterStatus | '', string> = {
-  '': 'Todos',
-  'Alive': 'Vivos',
-  'Dead': 'Mortos',
-  'unknown': 'Desconhecido',
-};
 
 export function HomePage() {
   const [search, setSearch] = useState('');
@@ -37,12 +29,6 @@ export function HomePage() {
     setPage(1);
   };
 
-  const handleClearFilters = () => {
-    setSearch('');
-    setStatus('');
-    setPage(1);
-  };
-
   const {
     characters,
     pagination,
@@ -57,23 +43,6 @@ export function HomePage() {
   });
 
   const { data: favoriteIds = [] } = useFavoriteIds();
-
-  // Build active filters
-  const activeFilters = [];
-  if (search) {
-    activeFilters.push({
-      label: `Busca: ${search}`,
-      value: search,
-      onClear: () => setSearch(''),
-    });
-  }
-  if (status) {
-    activeFilters.push({
-      label: `Status: ${statusLabels[status]}`,
-      value: status,
-      onClear: () => setStatus(''),
-    });
-  }
 
   return (
     <Container>
@@ -105,12 +74,6 @@ export function HomePage() {
           placeholder="Buscar por nome..."
         />
         <StatusFilter value={status} onChange={handleStatusChange} />
-        
-        {/* Active Filters */}
-        <ActiveFilters 
-          filters={activeFilters}
-          onClearAll={handleClearFilters}
-        />
       </div>
 
       {/* Content */}

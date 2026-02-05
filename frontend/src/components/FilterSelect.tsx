@@ -32,13 +32,6 @@ export function FilterSelect({
 
   return (
     <div className="relative group">
-      {/* Glow effect on focus */}
-      <div 
-        className="absolute -inset-0.5 rounded-xl opacity-0 group-focus-within:opacity-50 blur transition-opacity duration-300"
-        style={{
-          background: accentColor,
-        }}
-      />
       
       <div className="relative flex items-center">
         {/* Icon */}
@@ -61,22 +54,17 @@ export function FilterSelect({
           className={`
             w-full
             bg-[var(--space-medium)]
-            border-2
             rounded-xl
             py-3 sm:py-3.5
             text-sm sm:text-base
             text-[var(--text-primary)]
             focus:outline-none
-            focus:bg-[var(--space-dark)]
+            focus:bg-[var(--space-light)]
             transition-all duration-300
             appearance-none
             cursor-pointer
             ${icon ? 'pl-12 pr-12' : 'pl-4 pr-12'}
           `}
-          style={{
-            borderColor: isActive ? accentColor : 'var(--space-light)',
-            boxShadow: isActive ? `0 0 20px ${accentColor}33` : 'none',
-          }}
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>

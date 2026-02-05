@@ -19,10 +19,6 @@ export function ActiveFilters({
 
   return (
     <div className="flex flex-wrap items-center gap-2 sm:gap-3 animate-fade-in-up">
-      <span className="text-xs sm:text-sm text-[var(--text-muted)] font-medium">
-        Filtros ativos:
-      </span>
-      
       {filters.map((filter, index) => (
         <button
           key={index}
@@ -32,14 +28,11 @@ export function ActiveFilters({
             flex items-center gap-1.5 sm:gap-2
             px-2.5 sm:px-3 py-1.5 sm:py-2
             rounded-lg sm:rounded-xl
-            border-2
             text-xs sm:text-sm font-medium
             transition-all duration-300
-            hover:scale-105
-            active:scale-95
+            hover:bg-opacity-80
           "
           style={{
-            borderColor: accentColor,
             backgroundColor: `${accentColor}22`,
             color: accentColor,
           }}
@@ -65,14 +58,11 @@ export function ActiveFilters({
             px-2.5 sm:px-3 py-1.5 sm:py-2
             rounded-lg sm:rounded-xl
             bg-[var(--space-medium)]
-            border-2 border-[var(--space-light)]
             text-xs sm:text-sm font-semibold
             text-[var(--text-secondary)]
             hover:text-[var(--text-primary)]
-            hover:border-[var(--border-hover)]
+            hover:bg-[var(--space-light)]
             transition-all duration-300
-            hover:scale-105
-            active:scale-95
           "
           title="Limpar todos os filtros"
         >

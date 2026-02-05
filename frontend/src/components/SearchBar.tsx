@@ -21,8 +21,6 @@ export function SearchBar({
 
   return (
     <div className="relative group">
-      {/* Glow effect on focus */}
-      <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--portal-green)] via-[var(--portal-cyan)] to-[var(--dimension-purple)] rounded-xl opacity-0 group-focus-within:opacity-50 blur transition-opacity duration-300" />
       
       <div className="relative">
         {/* Search icon */}
@@ -46,20 +44,15 @@ export function SearchBar({
           className="
             w-full
             bg-[var(--space-medium)]
-            border-2 border-[var(--space-light)]
             rounded-xl
             py-3 sm:py-3.5 pl-12 pr-12
             text-sm sm:text-base
             text-[var(--text-primary)]
             placeholder-[var(--text-muted)]
             focus:outline-none
-            focus:border-[var(--portal-green)]
-            focus:bg-[var(--space-dark)]
+            focus:bg-[var(--space-light)]
             transition-all duration-300
           "
-          style={{
-            boxShadow: value ? '0 0 20px rgba(151, 206, 76, 0.1)' : 'none'
-          }}
         />
 
         {/* Clear button */}

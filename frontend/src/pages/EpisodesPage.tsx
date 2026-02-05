@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useEpisodes, useDebounce } from '../hooks';
-import { Container, SearchBar, FilterSelect, ActiveFilters, Pagination, ErrorState, PageHeader } from '../components';
+import { Container, SearchBar, FilterSelect, Pagination, ErrorState, PageHeader } from '../components';
 import type { Episode } from '../types';
 
 function EpisodeCard({ episode }: { episode: Episode }) {
@@ -82,35 +82,11 @@ export function EpisodesPage() {
     setPage(1);
   };
 
-  const handleClearFilters = () => {
-    setSearch('');
-    setSeason('');
-    setPage(1);
-  };
-
   const { episodes, pagination, isLoading, isError, refetch, prefetchNextPage } = useEpisodes({
     page,
     name: debouncedSearch || undefined,
     episode: season || undefined,
   });
-
-  // Build active filters
-  const activeFilters = [];
-  if (search) {
-    activeFilters.push({
-      label: `Busca: ${search}`,
-      value: search,
-      onClear: () => setSearch(''),
-    });
-  }
-  if (season) {
-    const seasonLabel = seasonFilters.find(s => s.value === season)?.label || season;
-    activeFilters.push({
-      label: seasonLabel,
-      value: season,
-      onClear: () => setSeason(''),
-    });
-  }
 
   return (
     <Container>
@@ -160,13 +136,6 @@ export function EpisodesPage() {
             />
           </div>
         </div>
-
-        {/* Active Filters */}
-        <ActiveFilters 
-          filters={activeFilters}
-          onClearAll={handleClearFilters}
-          accentColor="var(--portal-cyan)"
-        />
       </div>
 
       {/* Content */}

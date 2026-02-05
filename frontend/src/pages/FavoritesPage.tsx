@@ -4,7 +4,6 @@ import {
   Container,
   SearchBar,
   FilterSelect,
-  ActiveFilters,
   Pagination,
   SkeletonList,
   ErrorState,
@@ -37,13 +36,6 @@ export function FavoritesPage() {
     setPage(1);
   };
 
-  const handleClearFilters = () => {
-    setSearch('');
-    setSortBy('createdAt');
-    setOrder('desc');
-    setPage(1);
-  };
-
   const { data, isLoading, isError, refetch } = useFavorites({
     page,
     limit: 12,
@@ -56,28 +48,6 @@ export function FavoritesPage() {
 
   const favorites = data?.data || [];
   const pagination = data?.pagination || { total: 0, page: 1, limit: 12, pages: 0 };
-
-  // Build active filters
-  const activeFilters = [];
-  if (search) {
-    activeFilters.push({
-      label: `Busca: ${search}`,
-      value: search,
-      onClear: () => setSearch(''),
-    });
-  }
-  if (sortBy !== 'createdAt' || order !== 'desc') {
-    const sortLabel = sortByOptions.find(s => s.value === sortBy)?.label || sortBy;
-    const orderLabel = order === 'asc' ? 'Crescente' : 'Decrescente';
-    activeFilters.push({
-      label: `${sortLabel} (${orderLabel})`,
-      value: `${sortBy}-${order}`,
-      onClear: () => {
-        setSortBy('createdAt');
-        setOrder('desc');
-      },
-    });
-  }
 
   return (
     <Container>
@@ -168,13 +138,6 @@ export function FavoritesPage() {
             </button>
           </div>
         </div>
-
-        {/* Active Filters */}
-        <ActiveFilters 
-          filters={activeFilters}
-          onClearAll={handleClearFilters}
-          accentColor="var(--dimension-pink)"
-        />
       </div>
 
       {/* Content */}
