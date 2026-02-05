@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useEpisodes, useDebounce } from '../hooks';
-import { Container, SearchBar, FilterSelect, ActiveFilters, Pagination, ErrorState } from '../components';
+import { Container, SearchBar, FilterSelect, ActiveFilters, Pagination, ErrorState, PageHeader } from '../components';
 import type { Episode } from '../types';
 
 function EpisodeCard({ episode }: { episode: Episode }) {
@@ -115,23 +115,24 @@ export function EpisodesPage() {
   return (
     <Container>
       {/* Page Header */}
-      <div className="mb-6 sm:mb-10">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="relative">
-            <div className="w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--portal-cyan)] to-[var(--dimension-purple)]" />
-          </div>
-          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--portal-cyan)]">
-            Episódios
-          </h1>
-        </div>
-        <p className="text-sm sm:text-base text-[var(--text-muted)] ml-5">
-          Explore{' '}
-          <span className="text-[var(--portal-cyan)] font-semibold">
-            {pagination.count || 'todos os'}
-          </span>{' '}
-          episódios do multiverso Rick and Morty
-        </p>
-      </div>
+      <PageHeader
+        title="Episódios"
+        icon={
+          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+          </svg>
+        }
+        subtitle={
+          <p>
+            Explore{' '}
+            <span className="text-[var(--portal-cyan)] font-semibold font-mono">
+              {pagination.count || 'todos os'}
+            </span>{' '}
+            episódios do multiverso Rick and Morty
+          </p>
+        }
+        accentColor="var(--portal-cyan)"
+      />
 
       {/* Filters Section */}
       <div className="mb-6 sm:mb-8 space-y-4">

@@ -9,6 +9,7 @@ import {
   SkeletonList,
   ErrorState,
   CharacterCard, // Import shared component
+  PageHeader,
 } from '../components';
 import { useFavorites, useToggleFavorite, useDebounce } from '../hooks';
 import type { Character } from '../types';
@@ -81,22 +82,23 @@ export function FavoritesPage() {
   return (
     <Container>
       {/* Page Header */}
-      <div className="mb-6 sm:mb-10">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="relative">
-            <div className="w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--dimension-pink)] to-[var(--status-dead)]" />
-          </div>
-          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--dimension-pink)]">
-            Meus Favoritos
-          </h1>
-        </div>
-        <p className="text-sm sm:text-base text-[var(--text-muted)] ml-5">
-          <span className="text-[var(--dimension-pink)] font-semibold">
-            {pagination.total}
-          </span>{' '}
-          {pagination.total === 1 ? 'personagem salvo' : 'personagens salvos'} no seu portal pessoal
-        </p>
-      </div>
+      <PageHeader
+        title="Meus Favoritos"
+        icon={
+          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        }
+        subtitle={
+          <p>
+            <span className="text-[var(--dimension-pink)] font-semibold font-mono">
+              {pagination.total}
+            </span>{' '}
+            {pagination.total === 1 ? 'personagem salvo' : 'personagens salvos'} no seu portal pessoal
+          </p>
+        }
+        accentColor="var(--dimension-pink)"
+      />
 
       {/* Filters Section */}
       <div className="mb-6 sm:mb-8 space-y-4">

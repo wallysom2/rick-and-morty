@@ -270,9 +270,6 @@ export function ChatWidget() {
                             </svg>
                         </button>
                     </div>
-                    <div className="text-[10px] text-[#6e7681] text-center mt-2 font-medium">
-                        Pressione <span className="text-[#8b949e]">Enter</span> para enviar
-                    </div>
                 </form>
             </div>
         </>

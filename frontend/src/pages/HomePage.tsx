@@ -8,6 +8,7 @@ import {
   Pagination,
   SkeletonList,
   ErrorState,
+  PageHeader,
 } from '../components';
 import { useCharacters, useFavoriteIds, useDebounce } from '../hooks';
 import type { CharacterStatus } from '../types';
@@ -77,23 +78,24 @@ export function HomePage() {
   return (
     <Container>
       {/* Page Header */}
-      <div className="mb-6 sm:mb-10">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="relative">
-            <div className="w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--portal-green)] to-[var(--portal-cyan)]" />
-          </div>
-          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--portal-green)]">
-            Personagens
-          </h1>
-        </div>
-        <p className="text-sm sm:text-base text-[var(--text-muted)] ml-5">
-          Explore{' '}
-          <span className="text-[var(--portal-cyan)] font-semibold">
-            {pagination.count || 'todos os'}
-          </span>{' '}
-          personagens do multiverso Rick and Morty
-        </p>
-      </div>
+      <PageHeader
+        title="Personagens"
+        icon={
+          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        }
+        subtitle={
+          <p>
+            Explore{' '}
+            <span className="text-[var(--portal-green)] font-semibold font-mono">
+              {pagination.count || 'todos os'}
+            </span>{' '}
+            personagens do multiverso Rick and Morty
+          </p>
+        }
+        accentColor="var(--portal-green)"
+      />
 
       {/* Filters Section */}
       <div className="mb-6 sm:mb-8 space-y-4">

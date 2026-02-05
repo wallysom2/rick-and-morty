@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocations, useDebounce } from '../hooks';
-import { Container, SearchBar, FilterSelect, ActiveFilters, Pagination, ErrorState } from '../components';
+import { Container, SearchBar, FilterSelect, ActiveFilters, Pagination, ErrorState, PageHeader } from '../components';
 import type { Location } from '../types';
 
 const typeIcons = {
@@ -158,23 +158,25 @@ export function LocationsPage() {
   return (
     <Container>
       {/* Page Header */}
-      <div className="mb-6 sm:mb-10">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="relative">
-            <div className="w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--dimension-gold)] to-[var(--dimension-purple)]" />
-          </div>
-          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--dimension-gold)]">
-            Localizações
-          </h1>
-        </div>
-        <p className="text-sm sm:text-base text-[var(--text-muted)] ml-5">
-          Explore{' '}
-          <span className="text-[var(--dimension-gold)] font-semibold">
-            {pagination.count || 'todas as'}
-          </span>{' '}
-          localizações do multiverso Rick and Morty
-        </p>
-      </div>
+      <PageHeader
+        title="Localizações"
+        icon={
+          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        }
+        subtitle={
+          <p>
+            Explore{' '}
+            <span className="text-[var(--dimension-gold)] font-semibold font-mono">
+              {pagination.count || 'todas as'}
+            </span>{' '}
+            localizações do multiverso Rick and Morty
+          </p>
+        }
+        accentColor="var(--dimension-gold)"
+      />
 
       {/* Filters Section */}
       <div className="mb-6 sm:mb-8 space-y-4">
