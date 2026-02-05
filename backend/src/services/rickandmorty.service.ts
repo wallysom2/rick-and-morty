@@ -60,6 +60,15 @@ export class RickAndMortyService {
       }
 
       const data = (await response.json()) as CharactersResponse;
+      
+      // Optimization: Empty episodes array for list view to reduce payload size
+      if (data.results) {
+        data.results = data.results.map(char => ({
+          ...char,
+          episode: []
+        }));
+      }
+
       apiCache.set(cacheKey, data, CACHE_TTL_SECONDS);
 
       return data;
@@ -171,6 +180,16 @@ export class RickAndMortyService {
       }
 
       const data = (await response.json()) as EpisodesResponse;
+
+      // Optimization: Add count and empty characters array for list view
+      if (data.results) {
+        data.results = data.results.map(ep => ({
+          ...ep,
+          charactersCount: ep.characters.length,
+          characters: []
+        }));
+      }
+
       apiCache.set(cacheKey, data, CACHE_TTL_SECONDS);
 
       return data;
@@ -283,6 +302,16 @@ export class RickAndMortyService {
       }
 
       const data = (await response.json()) as LocationsResponse;
+      
+      // Optimization: Add count and empty residents array for list view
+      if (data.results) {
+        data.results = data.results.map(loc => ({
+          ...loc,
+          residentsCount: loc.residents.length,
+          residents: []
+        }));
+      }
+
       apiCache.set(cacheKey, data, CACHE_TTL_SECONDS);
 
       return data;

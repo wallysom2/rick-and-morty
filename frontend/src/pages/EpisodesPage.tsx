@@ -24,7 +24,7 @@ function EpisodeCard({ episode }: { episode: Episode }) {
           </span>
           <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-xs font-medium px-2 py-1 rounded-md bg-[var(--space-medium)]">
             <IoPeopleOutline className="w-3.5 h-3.5" />
-            <span>{episode.characters.length}</span>
+            <span>{episode.charactersCount ?? episode.characters.length}</span>
           </div>
         </div>
 

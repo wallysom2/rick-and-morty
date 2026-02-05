@@ -44,7 +44,7 @@ function LocationCard({ location }: { location: Location }) {
           </div>
           <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-xs font-medium px-2 py-1 rounded-md bg-[var(--space-medium)]">
             <IoPeopleOutline className="w-3.5 h-3.5" />
-            <span>{location.residents.length}</span>
+            <span>{location.residentsCount ?? location.residents.length}</span>
           </div>
         </div>
 
