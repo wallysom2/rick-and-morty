@@ -49,36 +49,14 @@ export function EpisodePage() {
       ]} />
       
       <div className="space-y-8">
-        {/* Header */}
-        <div className="relative overflow-hidden rounded-2xl bg-[var(--bg-terminal)] border border-[var(--border-default)] p-6 sm:p-10">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--portal-cyan)] opacity-5 blur-[100px] pointer-events-none" />
-          
-          <div className="relative z-10">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
-              <span className="self-start px-3 py-1.5 text-sm font-mono font-bold bg-[var(--portal-cyan)]/10 text-[var(--portal-cyan)] border border-[var(--portal-cyan)]/20 rounded-lg">
-                {episode.episode}
-              </span>
-              <span className="hidden sm:inline-block text-[var(--text-muted)]">•</span>
-              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span>{episode.air_date}</span>
-              </div>
-            </div>
-            
-            <h1 className="text-3xl sm:text-5xl font-title font-bold text-[var(--text-primary)] mb-4">
+        {/* Info Card */}
+        <TerminalCard>
+          <div className="mb-8 border-b border-[var(--border-default)] pb-6">
+            <h1 className="text-3xl sm:text-4xl font-title font-bold text-[var(--text-primary)] mb-2">
               {episode.name}
             </h1>
-            
-            <p className="text-lg text-[var(--text-muted)] max-w-2xl">
-              Este episódio apresenta {episode.characters.length} personagens e foi transmitido originalmente em {episode.air_date}.
-            </p>
           </div>
-        </div>
-        
-        {/* Info Card */}
-        <TerminalCard title="EPISODE_DATA">
+          
           <div className="info-row">
             <div className="info-item">
               <span className="info-label">
