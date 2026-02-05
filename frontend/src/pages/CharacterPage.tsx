@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCharacter, useFavoriteIds, useToggleFavorite, useMultipleEpisodes } from '../hooks';
 import { Breadcrumb } from '../components/Breadcrumb';
@@ -22,6 +23,15 @@ export function CharacterPage() {
   }).filter(id => id > 0) || [];
   
   const { data: episodes = [] } = useMultipleEpisodes(episodeIds);
+
+  const [expandedSeasons, setExpandedSeasons] = useState<Record<string, boolean>>({});
+
+  const toggleSeason = (season: string) => {
+    setExpandedSeasons(prev => ({
+      ...prev,
+      [season]: !prev[season]
+    }));
+  };
 
   if (isLoading) {
     return (
@@ -59,6 +69,26 @@ export function CharacterPage() {
   const nameParts = character.name.split(' ');
   const firstName = nameParts[0];
   const lastName = nameParts.slice(1).join(' ');
+
+
+  // Group episodes by season
+  const episodesBySeason = episodes.reduce((acc, ep) => {
+    const match = ep.episode.match(/S(\d+)E\d+/);
+    const season = match ? `Temporada ${parseInt(match[1])}` : 'Outros';
+    
+    if (!acc[season]) {
+      acc[season] = [];
+    }
+    acc[season].push(ep);
+    return acc;
+  }, {} as Record<string, typeof episodes>);
+
+  // Sort seasons
+  const sortedSeasons = Object.keys(episodesBySeason).sort((a, b) => {
+    if (a === 'Outros') return 1;
+    if (b === 'Outros') return -1;
+    return a.localeCompare(b, undefined, { numeric: true });
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -176,25 +206,67 @@ export function CharacterPage() {
           
           {/* Episodes appeared */}
           {episodes.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-sm font-medium text-[var(--text-muted)] uppercase tracking-wider">
-                Aparece em {character.episode.length} episodio{character.episode.length !== 1 ? 's' : ''}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {episodes.map(ep => (
-                  <Link
-                    key={ep.id}
-                    to={`/episodes/${ep.id}`}
-                    className="px-3 py-1.5 text-sm bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-default)] rounded-lg transition-colors"
-                  >
-                    {ep.episode}
-                  </Link>
-                ))}
-                {character.episode.length > 5 && (
-                  <span className="px-3 py-1.5 text-sm text-[var(--text-muted)]">
-                    +{character.episode.length - 5} mais
-                  </span>
-                )}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                  Aparece em {character.episode.length} episodio{character.episode.length !== 1 ? 's' : ''}
+                </h3>
+              </div>
+              
+              <div className="space-y-3">
+                {sortedSeasons.map(season => {
+                  const isExpanded = expandedSeasons[season];
+                  const seasonEpisodes = episodesBySeason[season];
+                  
+                  return (
+                    <div key={season} className={`
+                      transition-all duration-200 border rounded-lg overflow-hidden
+                      ${isExpanded 
+                        ? 'bg-[var(--bg-card)] border-[var(--color-primary)]/30 shadow-lg shadow-[var(--color-primary)]/5' 
+                        : 'bg-[var(--bg-card)]/50 border-[var(--border-default)] hover:border-[var(--color-primary)]/50 hover:bg-[var(--bg-card)]'
+                      }
+                    `}>
+                      <button
+                        onClick={() => toggleSeason(season)}
+                        className="w-full flex items-center justify-between p-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className={`text-sm font-medium transition-colors ${isExpanded ? 'text-[var(--color-primary)]' : 'text-[var(--text-primary)]'}`}>
+                            {season}
+                          </span>
+                          <span className="text-xs text-[var(--text-secondary)] bg-[var(--bg-main)] px-2 py-0.5 rounded border border-[var(--border-default)]">
+                            {seasonEpisodes.length} eps
+                          </span>
+                        </div>
+                        <svg 
+                          className={`w-4 h-4 text-[var(--text-secondary)] transition-transform duration-200 ${isExpanded ? 'rotate-180 text-[var(--color-primary)]' : ''}`} 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      
+                      {isExpanded && (
+                        <div className="px-3 pb-3 pt-1">
+                          <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                            {seasonEpisodes.map(ep => (
+                              <Link
+                                key={ep.id}
+                                to={`/episodes/${ep.id}`}
+                                className="px-2 py-1.5 text-xs text-center bg-[var(--bg-main)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-default)] hover:border-[var(--color-primary)] rounded transition-all duration-200"
+                                title={`${ep.episode}: ${ep.name}`}
+                              >
+                                {ep.episode}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
