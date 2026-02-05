@@ -49,28 +49,21 @@ export function LocationPage() {
       ]} />
       
       <div className="space-y-8">
-        {/* Header */}
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="px-3 py-1.5 text-sm font-mono font-bold bg-[var(--color-primary)]/20 text-[var(--color-primary)] rounded-lg">
-              #{location.id}
-            </span>
-            {location.type && (
-              <span className="px-3 py-1.5 text-sm font-medium bg-[var(--bg-terminal)] text-[var(--text-secondary)] rounded-lg border border-[var(--border-default)]">
-                {location.type}
-              </span>
-            )}
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--text-primary)] mb-2">
-            {location.name}
-          </h1>
-          <p className="text-lg text-[var(--text-secondary)]">
-            {location.dimension || 'Dimensao desconhecida'}
-          </p>
-        </div>
         
         {/* Info Card */}
         <TerminalCard title="LOCATION_DATA">
+          <div className="info-row full-width">
+            <div className="info-item">
+              <span className="info-label">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                NOME
+              </span>
+              <span className="info-value text-xl">{location.name}</span>
+            </div>
+          </div>
           <div className="info-row">
             <div className="info-item">
               <span className="info-label">
@@ -107,35 +100,46 @@ export function LocationPage() {
         {/* Residents Grid */}
         {residents.length > 0 && (
           <div>
-            <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
-              Residentes
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold font-title text-[var(--text-primary)]">
+                Residentes
+              </h2>
+              <span className="text-sm text-[var(--text-muted)] bg-[var(--bg-terminal)] px-3 py-1 rounded-full border border-[var(--border-default)]">
+                {residents.length} encontrados
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {residents.map(char => (
                 <Link
                   key={char.id}
                   to={`/character/${char.id}`}
-                  className="group bg-[var(--bg-card)] rounded-lg overflow-hidden card-hover"
+                  className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--dimension-gold)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 >
-                  <div className="aspect-square overflow-hidden">
+                  <div className="aspect-square overflow-hidden bg-[var(--bg-terminal)]">
                     <img 
                       src={char.image} 
                       alt={char.name}
-                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-card)] via-transparent to-transparent opacity-60" />
                   </div>
-                  <div className="p-2">
-                    <p className="text-sm font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--color-primary)] transition-colors">
+                  
+                  <div className="absolute top-2 left-2">
+                    <span className={`block w-2.5 h-2.5 rounded-full ${
+                      char.status === 'Alive' ? 'bg-[var(--status-alive)] shadow-[0_0_8px_var(--status-alive)]' : 
+                      char.status === 'Dead' ? 'bg-[var(--status-dead)]' : 'bg-[var(--status-unknown)]'
+                    }`} />
+                  </div>
+
+                  <div className="p-3">
+                    <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-[var(--dimension-gold)] transition-colors">
                       {char.name}
                     </p>
-                    <div className="flex items-center gap-1 mt-1">
-                      <span className={`w-2 h-2 rounded-full ${
-                        char.status === 'Alive' ? 'status-dot-alive' : 
-                        char.status === 'Dead' ? 'status-dot-dead' : 'status-dot-unknown'
-                      }`} />
-                      <span className="text-xs text-[var(--text-muted)]">{char.status}</span>
-                    </div>
+                    <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">
+                      {char.species}
+                    </p>
                   </div>
                 </Link>
               ))}

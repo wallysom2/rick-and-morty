@@ -50,18 +50,31 @@ export function EpisodePage() {
       
       <div className="space-y-8">
         {/* Header */}
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="px-3 py-1.5 text-sm font-mono font-bold bg-[var(--color-primary)]/20 text-[var(--color-primary)] rounded-lg">
-              {episode.episode}
-            </span>
+        <div className="relative overflow-hidden rounded-2xl bg-[var(--bg-terminal)] border border-[var(--border-default)] p-6 sm:p-10">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--portal-cyan)] opacity-5 blur-[100px] pointer-events-none" />
+          
+          <div className="relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+              <span className="self-start px-3 py-1.5 text-sm font-mono font-bold bg-[var(--portal-cyan)]/10 text-[var(--portal-cyan)] border border-[var(--portal-cyan)]/20 rounded-lg">
+                {episode.episode}
+              </span>
+              <span className="hidden sm:inline-block text-[var(--text-muted)]">•</span>
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>{episode.air_date}</span>
+              </div>
+            </div>
+            
+            <h1 className="text-3xl sm:text-5xl font-title font-bold text-[var(--text-primary)] mb-4">
+              {episode.name}
+            </h1>
+            
+            <p className="text-lg text-[var(--text-muted)] max-w-2xl">
+              Este episódio apresenta {episode.characters.length} personagens e foi transmitido originalmente em {episode.air_date}.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--text-primary)] mb-2">
-            {episode.name}
-          </h1>
-          <p className="text-lg text-[var(--text-secondary)]">
-            Exibido em: {episode.air_date}
-          </p>
         </div>
         
         {/* Info Card */}
@@ -102,27 +115,45 @@ export function EpisodePage() {
         {/* Characters Grid */}
         {characters.length > 0 && (
           <div>
-            <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
-              Personagens em Destaque
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold font-title text-[var(--text-primary)]">
+                Personagens em Destaque
+              </h2>
+              <span className="text-sm text-[var(--text-muted)] bg-[var(--bg-terminal)] px-3 py-1 rounded-full border border-[var(--border-default)]">
+                {characters.length} encontrados
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {characters.map(char => (
                 <Link
                   key={char.id}
                   to={`/character/${char.id}`}
-                  className="group bg-[var(--bg-card)] rounded-lg overflow-hidden card-hover"
+                  className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--color-primary)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 >
-                  <div className="aspect-square overflow-hidden">
+                  <div className="aspect-square overflow-hidden bg-[var(--bg-terminal)]">
                     <img 
                       src={char.image} 
                       alt={char.name}
-                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-card)] via-transparent to-transparent opacity-60" />
                   </div>
-                  <div className="p-2">
-                    <p className="text-sm font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--color-primary)] transition-colors">
+                  
+                  <div className="absolute top-2 left-2">
+                    <span className={`block w-2.5 h-2.5 rounded-full ${
+                      char.status === 'Alive' ? 'bg-[var(--status-alive)] shadow-[0_0_8px_var(--status-alive)]' : 
+                      char.status === 'Dead' ? 'bg-[var(--status-dead)]' : 'bg-[var(--status-unknown)]'
+                    }`} />
+                  </div>
+
+                  <div className="p-3">
+                    <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-[var(--color-primary)] transition-colors">
                       {char.name}
+                    </p>
+                    <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">
+                      {char.species}
                     </p>
                   </div>
                 </Link>

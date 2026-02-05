@@ -8,27 +8,33 @@ function EpisodeCard({ episode }: { episode: Episode }) {
   return (
     <Link 
       to={`/episodes/${episode.id}`}
-      className="block bg-[var(--bg-card)] rounded-xl p-4 card-hover animate-fade-in-up border border-[var(--border-default)] hover:border-[var(--color-primary)]"
+      className="group relative flex flex-col bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--portal-cyan)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,212,255,0.15)] animate-fade-in-up"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="px-2 py-1 text-xs font-mono font-bold bg-[var(--color-primary)]/20 text-[var(--color-primary)] rounded">
-              {episode.episode}
-            </span>
+      {/* Top accent line */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--portal-cyan)] to-[var(--dimension-purple)] opacity-0 group-hover:opacity-100 transition-opacity" />
+      
+      <div className="p-5 flex flex-col h-full">
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <span className="px-2.5 py-1 text-xs font-mono font-bold bg-[var(--portal-cyan)]/10 text-[var(--portal-cyan)] rounded border border-[var(--portal-cyan)]/20 group-hover:bg-[var(--portal-cyan)]/20 transition-colors">
+            {episode.episode}
+          </span>
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-xs font-medium bg-[var(--bg-terminal)] px-2 py-1 rounded-md border border-[var(--border-default)]">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span>{episode.characters.length}</span>
           </div>
-          <h3 className="text-lg font-semibold text-[var(--text-primary)] truncate mb-1">
-            {episode.name}
-          </h3>
-          <p className="text-sm text-[var(--text-secondary)]">
-            {episode.air_date}
-          </p>
         </div>
-        <div className="flex items-center gap-1 text-[var(--text-muted)] bg-[var(--bg-terminal)] px-2 py-1 rounded-lg">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+
+        <h3 className="text-lg font-title font-semibold text-[var(--text-primary)] group-hover:text-[var(--portal-cyan)] transition-colors line-clamp-2 mb-auto">
+          {episode.name}
+        </h3>
+        
+        <div className="mt-4 pt-4 border-t border-[var(--border-default)] flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+          <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          <span className="text-xs font-mono">{episode.characters.length}</span>
+          {episode.air_date}
         </div>
       </div>
     </Link>
@@ -37,13 +43,14 @@ function EpisodeCard({ episode }: { episode: Episode }) {
 
 function EpisodeSkeleton() {
   return (
-    <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-default)] animate-pulse">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1">
-          <div className="h-6 w-16 skeleton rounded mb-2" />
-          <div className="h-5 w-3/4 skeleton rounded mb-2" />
-          <div className="h-4 w-1/2 skeleton rounded" />
-        </div>
+    <div className="bg-[var(--bg-card)] rounded-xl p-5 border border-[var(--border-default)] animate-pulse flex flex-col h-[160px]">
+      <div className="flex justify-between items-start mb-4">
+        <div className="h-6 w-16 skeleton rounded" />
+        <div className="h-6 w-12 skeleton rounded" />
+      </div>
+      <div className="h-6 w-3/4 skeleton rounded mb-auto" />
+      <div className="pt-4 mt-4 border-t border-[var(--border-default)]">
+        <div className="h-4 w-1/2 skeleton rounded" />
       </div>
     </div>
   );
