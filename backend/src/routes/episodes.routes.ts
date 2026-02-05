@@ -7,18 +7,18 @@ const router: RouterType = Router();
  * @route GET /api/episodes
  * @desc Get all episodes with optional filters
  */
-router.get('/', (req, res) => episodesController.getAll(req, res));
+router.get('/', (req, res, next) => episodesController.getAll(req, res, next));
 
 /**
  * @route GET /api/episodes/:id
  * @desc Get a single episode by ID
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', (req, res, next) => {
   // Check if it's a comma-separated list of IDs
   if (req.params.id.includes(',')) {
-    return episodesController.getMultiple(req, res);
+    return episodesController.getMultiple(req, res, next);
   }
-  return episodesController.getById(req, res);
+  return episodesController.getById(req, res, next);
 });
 
-export default router;
+export { router as episodesRoutes };

@@ -55,6 +55,6 @@ const router: RouterType = Router();
  *       500:
  *         description: Server error
  */
-router.post('/', (req, res) => chatController.chat(req, res));
+router.post('/', (req, res, next) => chatController.chat(req, res, next));
 
-export default router;
+export { router as chatRoutes };

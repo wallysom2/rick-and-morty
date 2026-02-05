@@ -7,18 +7,18 @@ const router: RouterType = Router();
  * @route GET /api/locations
  * @desc Get all locations with optional filters
  */
-router.get('/', (req, res) => locationsController.getAll(req, res));
+router.get('/', (req, res, next) => locationsController.getAll(req, res, next));
 
 /**
  * @route GET /api/locations/:id
  * @desc Get a single location by ID
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', (req, res, next) => {
   // Check if it's a comma-separated list of IDs
   if (req.params.id.includes(',')) {
-    return locationsController.getMultiple(req, res);
+    return locationsController.getMultiple(req, res, next);
   }
-  return locationsController.getById(req, res);
+  return locationsController.getById(req, res, next);
 });
 
-export default router;
+export { router as locationsRoutes };
