@@ -188,17 +188,12 @@ export class ChatService {
     private openai: OpenAI | null;
 
     constructor() {
-        if (!env.OPENROUTER_API_KEY) {
-            logger.warn('OPENROUTER_API_KEY not configured - chat feature will be disabled');
+        if (!env.OPENAI_API_KEY) {
+            logger.warn('OPENAI_API_KEY not configured - chat feature will be disabled');
             this.openai = null;
         } else {
             this.openai = new OpenAI({
-                apiKey: env.OPENROUTER_API_KEY,
-                baseURL: 'https://openrouter.ai/api/v1',
-                defaultHeaders: {
-                    'HTTP-Referer': 'https://github.com/rick-and-morty-app', // Opcional, mas bom para OpenRouter
-                    'X-Title': 'Rick and Morty App',
-                }
+                apiKey: env.OPENAI_API_KEY,
             });
         }
     }
@@ -379,12 +374,12 @@ export class ChatService {
         try {
             // First API call
             let response = await this.openai.chat.completions.create({
-                model: env.CHAT_MODEL,
+                model: 'gpt-4.1-2025-04-14',
                 messages,
                 tools: TOOLS,
                 tool_choice: 'auto',
                 temperature: 0.7,
-                max_tokens: 150,
+                max_tokens: 400,
             });
 
             let assistantMessage = response.choices[0].message;
@@ -413,12 +408,12 @@ export class ChatService {
 
                 // Get next response (more tokens after tool calls for richer responses)
                 response = await this.openai.chat.completions.create({
-                    model: env.CHAT_MODEL,
+                    model: 'gpt-4.1-2025-04-14',
                     messages,
                     tools: TOOLS,
                     tool_choice: 'auto',
                     temperature: 0.6,
-                    max_tokens: 300,
+                    max_tokens: 400,
                 });
 
                 assistantMessage = response.choices[0].message;
@@ -427,7 +422,17 @@ export class ChatService {
             return assistantMessage.content || "Eu... eu não sei o que dizer, ai caramba.";
         } catch (error) {
             logger.error('Chat completion error:', error);
-            throw new Error('Falha ao gerar resposta');
+            
+            // Log more details for debugging
+            if (error instanceof Error) {
+                logger.error('Error details:', {
+                    message: error.message,
+                    name: error.name,
+                    stack: error.stack
+                });
+            }
+            
+            throw new Error(`Falha ao gerar resposta: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
         }
     }
 }
