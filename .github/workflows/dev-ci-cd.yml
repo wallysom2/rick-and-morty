@@ -1,16 +1,11 @@
-name: Dev CI/CD Pipeline
+name: Dev CI - Build and Test
 
 on:
   push:
     branches:
       - dev
 
-env:
-  BACKEND_IMAGE: wallysom2/rick-and-morty-backend
-  FRONTEND_IMAGE: wallysom2/rick-and-morty-frontend
-
 jobs:
-  # Job 1: Build and Test
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
@@ -66,71 +61,9 @@ jobs:
           MONGO_URL: mongodb://localhost:27017/rickandmorty-test
           NODE_ENV: test
 
-  # Job 2: Push to Docker Hub (only if tests pass)
-  docker-push:
-    name: Push to Docker Hub
-    runs-on: ubuntu-latest
-    needs: build-and-test
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: wallysom2
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Extract metadata for Backend
-        id: meta-backend
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.BACKEND_IMAGE }}
-          tags: |
-            type=sha,prefix=dev-
-            type=raw,value=dev-latest
-
-      - name: Build and push Backend
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./backend/Dockerfile
-          push: true
-          tags: ${{ steps.meta-backend.outputs.tags }}
-          labels: ${{ steps.meta-backend.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Extract metadata for Frontend
-        id: meta-frontend
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.FRONTEND_IMAGE }}
-          tags: |
-            type=sha,prefix=dev-
-            type=raw,value=dev-latest
-
-      - name: Build and push Frontend
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./frontend/Dockerfile
-          push: true
-          tags: ${{ steps.meta-frontend.outputs.tags }}
-          labels: ${{ steps.meta-frontend.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
       - name: Summary
+        if: success()
         run: |
-          echo "## Docker Images Pushed" >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Build and Tests Passed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Backend" >> $GITHUB_STEP_SUMMARY
-          echo "- \`${{ env.BACKEND_IMAGE }}:dev-latest\`" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Frontend" >> $GITHUB_STEP_SUMMARY
-          echo "- \`${{ env.FRONTEND_IMAGE }}:dev-latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "All checks passed successfully on dev branch!" >> $GITHUB_STEP_SUMMARY
