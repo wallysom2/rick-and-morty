@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Character, CharacterStatus } from '../types';
 import { FavoriteButton } from './FavoriteButton';
+import { IoLocationOutline } from 'react-icons/io5';
 
 interface CharacterCardProps {
   character: Character;
@@ -24,7 +25,7 @@ export function CharacterCard({
   const status = statusConfig[character.status];
 
   return (
-    <div className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden card-hover animate-fade-in-up">
+    <div className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--color-primary)]/50 hover:shadow-[0_0_20px_rgba(0,255,136,0.15)] transition-all duration-300 card-hover animate-fade-in-up">
       {/* Image with Link */}
       <Link to={`/character/${character.id}`} className="block relative aspect-square overflow-hidden">
         <img
@@ -72,10 +73,7 @@ export function CharacterCard({
         <p className="text-sm text-[var(--text-secondary)] mb-2">{character.species}</p>
         
         <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
-          <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
+          <IoLocationOutline className="w-3.5 h-3.5 flex-shrink-0" />
           <span className="text-xs truncate">{character.location.name}</span>
         </div>
       </div>

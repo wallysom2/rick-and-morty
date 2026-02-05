@@ -35,7 +35,7 @@ function LocationCard({ location }: { location: Location }) {
   return (
     <Link
       to={`/locations/${location.id}`}
-      className="group relative flex flex-col bg-[var(--bg-card)] rounded-xl overflow-hidden hover:bg-[var(--space-light)] transition-all duration-300 animate-fade-in-up"
+      className="group relative flex flex-col bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--dimension-purple)]/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all duration-300 animate-fade-in-up"
     >
       <div className="p-5 flex flex-col h-full">
         <div className="flex items-start justify-between gap-3 mb-3">
