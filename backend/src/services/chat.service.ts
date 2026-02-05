@@ -188,12 +188,17 @@ export class ChatService {
     private openai: OpenAI | null;
 
     constructor() {
-        if (!env.OPENAI_API_KEY) {
-            logger.warn('OPENAI_API_KEY not configured - chat feature will be disabled');
+        if (!env.OPENROUTER_API_KEY) {
+            logger.warn('OPENROUTER_API_KEY not configured - chat feature will be disabled');
             this.openai = null;
         } else {
             this.openai = new OpenAI({
-                apiKey: env.OPENAI_API_KEY,
+                apiKey: env.OPENROUTER_API_KEY,
+                baseURL: 'https://openrouter.ai/api/v1',
+                defaultHeaders: {
+                    'HTTP-Referer': 'https://github.com/rick-and-morty-app', // Opcional, mas bom para OpenRouter
+                    'X-Title': 'Rick and Morty App',
+                }
             });
         }
     }
@@ -303,20 +308,20 @@ export class ChatService {
                         species: f.species,
                         status: f.status
                     }));
-                    return JSON.stringify({ 
+                    return JSON.stringify({
                         total: result.pagination.total,
                         page: result.pagination.page,
                         totalPages: result.pagination.pages,
-                        favoritos: favorites 
+                        favoritos: favorites
                     });
                 }
 
                 case 'get_favorites_count': {
                     const count = await favoritesService.getFavoritesCount();
-                    return JSON.stringify({ 
+                    return JSON.stringify({
                         total: count,
-                        mensagem: count === 0 
-                            ? 'Nenhum personagem favoritado ainda' 
+                        mensagem: count === 0
+                            ? 'Nenhum personagem favoritado ainda'
                             : `${count} personagem(ns) favoritado(s)`
                     });
                 }
@@ -332,12 +337,12 @@ export class ChatService {
                     } catch {
                         // ignora erro, usa ID
                     }
-                    return JSON.stringify({ 
+                    return JSON.stringify({
                         characterId,
                         name: characterName,
                         isFavorite,
-                        mensagem: isFavorite 
-                            ? `${characterName} está na lista de favoritos!` 
+                        mensagem: isFavorite
+                            ? `${characterName} está na lista de favoritos!`
                             : `${characterName} não está favoritado.`
                     });
                 }
@@ -374,7 +379,7 @@ export class ChatService {
         try {
             // First API call
             let response = await this.openai.chat.completions.create({
-model: 'gpt-4o-mini',
+                model: env.CHAT_MODEL,
                 messages,
                 tools: TOOLS,
                 tool_choice: 'auto',
@@ -406,9 +411,9 @@ model: 'gpt-4o-mini',
                     });
                 }
 
-// Get next response (more tokens after tool calls for richer responses)
+                // Get next response (more tokens after tool calls for richer responses)
                 response = await this.openai.chat.completions.create({
-                    model: 'gpt-4o-mini',
+                    model: env.CHAT_MODEL,
                     messages,
                     tools: TOOLS,
                     tool_choice: 'auto',

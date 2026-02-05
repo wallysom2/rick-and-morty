@@ -7,7 +7,8 @@ const envSchema = z.object({
   MONGO_URL: z.string().url().default('mongodb://localhost:27017/rickandmorty'),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-  OPENAI_API_KEY: z.string().optional(),
+  OPENROUTER_API_KEY: z.string().optional(),
+  CHAT_MODEL: z.string().default('deepseek/deepseek-v3.2'),
 });
 
 function validateEnv() {
