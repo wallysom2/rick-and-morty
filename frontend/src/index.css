@@ -32,15 +32,15 @@
   --space-lighter: #484f58;
   
   /* Background Colors - Dark Theme */
-  --bg-main: #0d1117;
-  --bg-card: #161b22;
-  --bg-card-hover: #1c2128;
-  --bg-terminal: #0f1318;
-  --bg-terminal-header: #1a1f26;
-  --bg-elevated: #21262d;
+  --bg-main: #0b0e14;
+  --bg-card: #1a212c;
+  --bg-card-hover: #242c38;
+  --bg-terminal: #11161d;
+  --bg-terminal-header: #1e252e;
+  --bg-elevated: #262e38;
   
   /* Text Colors */
-  --text-primary: #ffffff;
+  --text-primary: #f0f6fc;
   --text-secondary: #8b949e;
   --text-muted: #6e7681;
   --text-accent: #00ff88;
@@ -94,6 +94,9 @@ html {
 body {
   font-family: var(--font-body);
   background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.03) 0%, transparent 25%);
   color: var(--text-primary);
   min-height: 100vh;
   margin: 0;

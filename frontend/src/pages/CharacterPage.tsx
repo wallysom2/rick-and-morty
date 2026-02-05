@@ -4,6 +4,17 @@ import { useCharacter, useFavoriteIds, useToggleFavorite, useMultipleEpisodes } 
 import { Breadcrumb } from '../components/Breadcrumb';
 import { TerminalCard } from '../components/TerminalCard';
 import { getCharacterDescription } from '../data/character-descriptions';
+import { 
+  IoPulseOutline, 
+  IoPersonOutline, 
+  IoMaleFemaleOutline, 
+  IoPlanetOutline, 
+  IoLocationOutline, 
+  IoChevronDownOutline, 
+  IoArrowBackOutline,
+  IoHeartOutline,
+  IoHeart
+} from 'react-icons/io5';
 
 export function CharacterPage() {
   const { id } = useParams<{ id: string }>();
@@ -144,9 +155,7 @@ export function CharacterPage() {
             <div className="info-row">
               <div className="info-item">
                 <span className="info-label">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <IoPulseOutline className="w-4 h-4" />
                   STATUS
                 </span>
                 <span className="info-value" style={{ color: character.status === 'Alive' ? 'var(--status-alive)' : character.status === 'Dead' ? 'var(--status-dead)' : 'var(--text-secondary)' }}>
@@ -155,9 +164,7 @@ export function CharacterPage() {
               </div>
               <div className="info-item">
                 <span className="info-label">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                  </svg>
+                  <IoPersonOutline className="w-4 h-4" />
                   ESPECIE
                 </span>
                 <span className="info-value">{character.species}</span>
@@ -167,18 +174,14 @@ export function CharacterPage() {
             <div className="info-row">
               <div className="info-item">
                 <span className="info-label">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                  <IoMaleFemaleOutline className="w-4 h-4" />
                   GENERO
                 </span>
                 <span className="info-value">{character.gender}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <IoPlanetOutline className="w-4 h-4" />
                   ORIGEM
                 </span>
                 <span className="info-value">{character.origin.name}</span>
@@ -188,17 +191,12 @@ export function CharacterPage() {
             <div className="info-row full-width">
               <div className="info-item">
                 <span className="info-label">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                  <IoLocationOutline className="w-4 h-4" />
                   ULTIMA LOCALIZACAO
                 </span>
                 <span className="info-value flex items-center gap-2">
                   {character.location.name}
-                  <svg className="w-4 h-4 text-[var(--color-primary)]" fill="currentColor" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="4" />
-                  </svg>
+                  <div className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
                 </span>
               </div>
             </div>
@@ -238,14 +236,9 @@ export function CharacterPage() {
                             {seasonEpisodes.length} eps
                           </span>
                         </div>
-                        <svg 
+                        <IoChevronDownOutline 
                           className={`w-4 h-4 text-[var(--text-secondary)] transition-transform duration-200 ${isExpanded ? 'rotate-180 text-[var(--color-primary)]' : ''}`} 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
+                        />
                       </button>
                       
                       {isExpanded && (
@@ -255,7 +248,7 @@ export function CharacterPage() {
                               <Link
                                 key={ep.id}
                                 to={`/episodes/${ep.id}`}
-                                className="px-2 py-1.5 text-xs text-center bg-[var(--bg-main)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-default)] hover:border-[var(--color-primary)] rounded transition-all duration-200"
+                                className="px-2 py-1.5 text-xs text-center bg-[var(--bg-main)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-default)] hover:border-[var(--color-primary)] hover:shadow-[0_0_10px_rgba(151,206,76,0.3)] rounded transition-all duration-200"
                                 title={`${ep.episode}: ${ep.name}`}
                               >
                                 {ep.episode}
@@ -277,9 +270,7 @@ export function CharacterPage() {
               onClick={() => navigate(-1)}
               className="btn btn-primary flex-1 sm:flex-none"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
+              <IoArrowBackOutline className="w-5 h-5" />
               Voltar ao Portal
             </button>
             
@@ -289,14 +280,11 @@ export function CharacterPage() {
               className={`btn btn-icon ${isFavorite ? 'bg-[var(--status-dead)]/20 border-[var(--status-dead)]' : ''}`}
               title={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
             >
-              <svg 
-                className="w-5 h-5"
-                fill={isFavorite ? 'var(--status-dead)' : 'none'}
-                stroke={isFavorite ? 'var(--status-dead)' : 'currentColor'}
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
+              {isFavorite ? (
+                <IoHeart className="w-5 h-5 text-[var(--status-dead)]" />
+              ) : (
+                <IoHeartOutline className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>

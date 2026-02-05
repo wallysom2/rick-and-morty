@@ -1,10 +1,9 @@
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { rickAndMortyService } from '../services/rickandmorty.service.js';
 import type { EpisodeQueryParams } from '../types/index.js';
-import { logger } from '../utils/logger.js';
 
 export class EpisodesController {
-  async getAll(req: Request, res: Response): Promise<void> {
+  async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { page, name, episode } = req.query;
 
@@ -17,50 +16,47 @@ export class EpisodesController {
       const data = await rickAndMortyService.getEpisodes(params);
       res.json(data);
     } catch (error) {
-      logger.error('Error in getAll episodes:', error);
-      res.status(500).json({ error: 'Failed to fetch episodes' });
+      next(error);
     }
   }
 
-  async getById(req: Request, res: Response): Promise<void> {
+  async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const episodeId = Number(id);
 
       if (isNaN(episodeId)) {
-        res.status(400).json({ error: 'Invalid episode ID' });
+        res.status(400).json({ error: { message: 'Invalid episode ID', status: 400 } });
         return;
       }
 
       const episode = await rickAndMortyService.getEpisodeById(episodeId);
 
       if (!episode) {
-        res.status(404).json({ error: 'Episode not found' });
+        res.status(404).json({ error: { message: 'Episode not found', status: 404 } });
         return;
       }
 
       res.json(episode);
     } catch (error) {
-      logger.error('Error in getById episode:', error);
-      res.status(500).json({ error: 'Failed to fetch episode' });
+      next(error);
     }
   }
 
-  async getMultiple(req: Request, res: Response): Promise<void> {
+  async getMultiple(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const episodeIds = id.split(',').map(Number).filter(id => !isNaN(id));
+      const episodeIds = id.split(',').map(Number).filter(id => !isNaN(id) && id > 0);
 
       if (episodeIds.length === 0) {
-        res.status(400).json({ error: 'Invalid episode IDs' });
+        res.status(400).json({ error: { message: 'Invalid episode IDs', status: 400 } });
         return;
       }
 
       const episodes = await rickAndMortyService.getMultipleEpisodes(episodeIds);
       res.json(episodes);
     } catch (error) {
-      logger.error('Error in getMultiple episodes:', error);
-      res.status(500).json({ error: 'Failed to fetch episodes' });
+      next(error);
     }
   }
 }

@@ -3,21 +3,15 @@ import {
   Container,
   SearchBar,
   StatusFilter,
-  ActiveFilters,
   CharacterList,
   Pagination,
   SkeletonList,
   ErrorState,
+  PageHeader,
 } from '../components';
 import { useCharacters, useFavoriteIds, useDebounce } from '../hooks';
 import type { CharacterStatus } from '../types';
-
-const statusLabels: Record<CharacterStatus | '', string> = {
-  '': 'Todos',
-  'Alive': 'Vivos',
-  'Dead': 'Mortos',
-  'unknown': 'Desconhecido',
-};
+import { IoPeopleOutline } from 'react-icons/io5';
 
 export function HomePage() {
   const [search, setSearch] = useState('');
@@ -36,12 +30,6 @@ export function HomePage() {
     setPage(1);
   };
 
-  const handleClearFilters = () => {
-    setSearch('');
-    setStatus('');
-    setPage(1);
-  };
-
   const {
     characters,
     pagination,
@@ -57,43 +45,25 @@ export function HomePage() {
 
   const { data: favoriteIds = [] } = useFavoriteIds();
 
-  // Build active filters
-  const activeFilters = [];
-  if (search) {
-    activeFilters.push({
-      label: `Busca: ${search}`,
-      value: search,
-      onClear: () => setSearch(''),
-    });
-  }
-  if (status) {
-    activeFilters.push({
-      label: `Status: ${statusLabels[status]}`,
-      value: status,
-      onClear: () => setStatus(''),
-    });
-  }
-
   return (
     <Container>
       {/* Page Header */}
-      <div className="mb-6 sm:mb-10">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="relative">
-            <div className="w-2 h-8 sm:h-10 rounded-full bg-gradient-to-b from-[var(--portal-green)] to-[var(--portal-cyan)]" />
-          </div>
-          <h1 className="font-title text-3xl sm:text-4xl lg:text-5xl text-[var(--portal-green)]">
-            Personagens
-          </h1>
-        </div>
-        <p className="text-sm sm:text-base text-[var(--text-muted)] ml-5">
-          Explore{' '}
-          <span className="text-[var(--portal-cyan)] font-semibold">
-            {pagination.count || 'todos os'}
-          </span>{' '}
-          personagens do multiverso Rick and Morty
-        </p>
-      </div>
+      <PageHeader
+        title="Personagens"
+        icon={
+          <IoPeopleOutline className="w-7 h-7" />
+        }
+        subtitle={
+          <p>
+            Explore{' '}
+            <span className="text-[var(--portal-green)] font-semibold font-mono">
+              {pagination.count || 'todos os'}
+            </span>{' '}
+            personagens do multiverso Rick and Morty
+          </p>
+        }
+        accentColor="var(--portal-green)"
+      />
 
       {/* Filters Section */}
       <div className="mb-6 sm:mb-8 space-y-4">
@@ -103,12 +73,6 @@ export function HomePage() {
           placeholder="Buscar por nome..."
         />
         <StatusFilter value={status} onChange={handleStatusChange} />
-        
-        {/* Active Filters */}
-        <ActiveFilters 
-          filters={activeFilters}
-          onClearAll={handleClearFilters}
-        />
       </div>
 
       {/* Content */}

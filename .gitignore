@@ -50,3 +50,4 @@ coverage/
 *.local
 .cache/
 AGENTS.md
+nul

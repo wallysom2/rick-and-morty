@@ -53,7 +53,7 @@ export function StatusFilter({ value, onChange }: StatusFilterProps) {
       {statuses.map((status) => {
         const isActive = value === status.value;
         
-        return (
+          return (
           <button
             key={status.value}
             onClick={() => onChange(status.value)}
@@ -61,23 +61,19 @@ export function StatusFilter({ value, onChange }: StatusFilterProps) {
               relative px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-sm sm:text-base font-semibold
               transition-all duration-300
               ${isActive 
-                ? 'text-[var(--space-black)]' 
-                : 'bg-[var(--space-medium)] text-[var(--text-secondary)] hover:bg-[var(--space-light)] border border-[var(--space-lighter)]/50'
+                ? 'bg-[var(--space-light)] text-[var(--text-primary)]' 
+                : 'bg-[var(--space-medium)] text-[var(--text-secondary)] hover:bg-[var(--space-light)]'
               }
+              focus:outline-none
             `}
-            style={isActive ? { 
-              background: status.activeGradient,
-              boxShadow: status.glow
-            } : {}}
           >
             <span className="flex items-center gap-1.5 sm:gap-2">
               {/* Status indicator dot */}
               <span 
-                className={`w-2 h-2 rounded-full ${isActive ? 'bg-[var(--space-black)]/30' : ''}`}
-                style={!isActive ? { 
+                className="w-2 h-2 rounded-full"
+                style={{ 
                   background: status.color,
-                  boxShadow: status.value === 'Alive' ? '0 0 8px var(--status-alive)' : 'none'
-                } : {}}
+                }}
               />
               <span className="hidden sm:inline">{status.label}</span>
               <span className="sm:hidden">{status.shortLabel}</span>

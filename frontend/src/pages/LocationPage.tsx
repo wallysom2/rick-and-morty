@@ -4,6 +4,13 @@ import { useLocation, useMultipleCharacters } from '../hooks';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { TerminalCard } from '../components/TerminalCard';
 import { Pagination } from '../components/Pagination';
+import { 
+  IoLocationOutline, 
+  IoPlanetOutline, 
+  IoCubeOutline, 
+  IoPeopleOutline,
+  IoArrowBack
+} from 'react-icons/io5';
 
 export function LocationPage() {
   const { id } = useParams<{ id: string }>();
@@ -67,10 +74,7 @@ export function LocationPage() {
           <div className="info-row full-width">
             <div className="info-item">
               <span className="info-label">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+                <IoLocationOutline className="w-4 h-4" />
                 NOME
               </span>
               <span className="info-value text-xl">{location.name}</span>
@@ -79,18 +83,14 @@ export function LocationPage() {
           <div className="info-row">
             <div className="info-item">
               <span className="info-label">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                </svg>
+                <IoPlanetOutline className="w-4 h-4" />
                 TIPO
               </span>
               <span className="info-value">{location.type || 'Desconhecido'}</span>
             </div>
             <div className="info-item">
               <span className="info-label">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <IoCubeOutline className="w-4 h-4" />
                 DIMENSAO
               </span>
               <span className="info-value">{location.dimension || 'Desconhecida'}</span>
@@ -99,9 +99,7 @@ export function LocationPage() {
           <div className="info-row full-width">
             <div className="info-item">
               <span className="info-label">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+                <IoPeopleOutline className="w-4 h-4" />
                 RESIDENTES
               </span>
               <span className="info-value">{location.residents.length} personagens residem nesta localizacao</span>
@@ -126,7 +124,7 @@ export function LocationPage() {
                 <Link
                   key={char.id}
                   to={`/character/${char.id}`}
-                  className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--dimension-gold)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                  className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--color-primary)] hover:shadow-[0_0_20px_rgba(151,206,76,0.15)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 >
                   <div className="aspect-square overflow-hidden bg-[var(--bg-terminal)]">
                     <img 
@@ -146,7 +144,7 @@ export function LocationPage() {
                   </div>
 
                   <div className="p-3">
-                    <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-[var(--dimension-gold)] transition-colors">
+                    <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-[var(--color-primary)] transition-colors">
                       {char.name}
                     </p>
                     <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">
@@ -173,9 +171,7 @@ export function LocationPage() {
         {/* Empty residents state */}
         {location.residents.length === 0 && (
           <div className="text-center py-8 bg-[var(--bg-card)] rounded-xl border border-[var(--border-default)]">
-            <svg className="w-12 h-12 mx-auto text-[var(--text-muted)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
+            <IoPeopleOutline className="w-12 h-12 mx-auto text-[var(--text-muted)] mb-3" />
             <p className="text-[var(--text-secondary)]">Nenhum residente conhecido nesta localizacao</p>
           </div>
         )}
@@ -183,9 +179,7 @@ export function LocationPage() {
         {/* Back button */}
         <div>
           <Link to="/locations" className="btn btn-secondary">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
+            <IoArrowBack className="w-5 h-5" />
             Voltar para Localizacoes
           </Link>
         </div>
