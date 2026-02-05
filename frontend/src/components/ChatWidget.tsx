@@ -96,31 +96,24 @@ export function ChatWidget() {
 
     return (
         <>
-            {/* Botão Flutuante (Toggle) */}
+            {/* Botão Flutuante (Toggle) - Apenas para abrir */}
             <button
-                onClick={() => setIsOpen(!isOpen)}
-                aria-label={isOpen ? 'Fechar chat' : 'Abrir chat'}
-                className={`fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg z-50
-                    ${isOpen ? 'bg-[#1a1f26] rotate-90' : 'bg-[#00ff88] hover:bg-[#00cc6a] hover:-translate-y-1'}`}
+                onClick={() => setIsOpen(true)}
+                aria-label="Abrir chat"
+                className={`fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg z-50 bg-[#00ff88] hover:bg-[#00cc6a] hover:-translate-y-1
+                    ${isOpen ? 'scale-0 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}
                 style={{
-                    boxShadow: isOpen ? '0 4px 12px rgba(0,0,0,0.5)' : '0 0 20px rgba(0, 255, 136, 0.4)'
+                    boxShadow: '0 0 20px rgba(0, 255, 136, 0.4)'
                 }}
             >
-                {isOpen ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                ) : (
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                )}
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
             </button>
 
             {/* Janela do Chat */}
             <div
-                className={`fixed bottom-24 right-6 w-[380px] max-w-[calc(100vw-3rem)] flex flex-col rounded-2xl overflow-hidden transition-all duration-300 origin-bottom-right z-40
+                className={`fixed bottom-6 right-6 w-[380px] max-w-[calc(100vw-3rem)] flex flex-col rounded-2xl overflow-hidden transition-all duration-300 origin-bottom-right z-40
                     ${isOpen ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 translate-y-4 pointer-events-none'}`}
                 style={{
                     height: '600px',
@@ -179,14 +172,26 @@ export function ChatWidget() {
                         {messages.length > 0 && (
                             <button
                                 onClick={clearMessages}
-                                className="p-1.5 text-[#8b949e] hover:text-[#ff4757] hover:bg-[#21262d] rounded-md transition-colors"
+                                className="p-2 md:p-1.5 text-[#8b949e] hover:text-[#ff4757] hover:bg-[#21262d] rounded-md transition-colors"
                                 title="Limpar conversa"
                             >
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                 </svg>
                             </button>
                         )}
+
+                        {/* Universal Close Button */}
+                        <button
+                            onClick={() => setIsOpen(false)}
+                            className="p-2 text-[#8b949e] hover:text-white hover:bg-[#21262d] rounded-md transition-colors ml-1"
+                            title="Fechar chat"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
