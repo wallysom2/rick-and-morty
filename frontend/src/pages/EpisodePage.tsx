@@ -68,7 +68,7 @@ export function EpisodePage() {
       
       <div className="space-y-8">
         {/* Info Card */}
-        <TerminalCard className="border-[var(--portal-cyan)] shadow-[0_0_15px_rgba(0,212,255,0.1)]">
+        <TerminalCard>
           <div className="mb-8 border-b border-[var(--border-default)] pb-6">
             <h1 className="text-3xl sm:text-4xl font-title font-bold text-[var(--text-primary)] mb-2">
               {episode.name}
@@ -77,14 +77,14 @@ export function EpisodePage() {
           
           <div className="info-row">
             <div className="info-item">
-              <span className="info-label text-[var(--portal-cyan)]">
+              <span className="info-label">
                 <IoVideocamOutline className="w-4 h-4" />
                 CODIGO DO EPISODIO
               </span>
               <span className="info-value font-mono">{episode.episode}</span>
             </div>
             <div className="info-item">
-              <span className="info-label text-[var(--portal-cyan)]">
+              <span className="info-label">
                 <IoCalendarOutline className="w-4 h-4" />
                 DATA DE EXIBICAO
               </span>
@@ -93,7 +93,7 @@ export function EpisodePage() {
           </div>
           <div className="info-row full-width">
             <div className="info-item">
-              <span className="info-label text-[var(--portal-cyan)]">
+              <span className="info-label">
                 <IoPeopleOutline className="w-4 h-4" />
                 PERSONAGENS
               </span>
@@ -109,7 +109,7 @@ export function EpisodePage() {
               <h2 className="text-xl font-bold font-title text-[var(--text-primary)]">
                 Personagens em Destaque
               </h2>
-              <span className="text-sm text-[var(--portal-cyan)] bg-[var(--portal-cyan)]/10 px-3 py-1 rounded-full border border-[var(--portal-cyan)]/20">
+              <span className="text-sm text-[var(--text-muted)] bg-[var(--bg-terminal)] px-3 py-1 rounded-full border border-[var(--border-default)]">
                 {characters.length} encontrados
               </span>
             </div>
@@ -119,7 +119,7 @@ export function EpisodePage() {
                 <Link
                   key={char.id}
                   to={`/character/${char.id}`}
-                  className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--portal-cyan)] hover:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                  className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--color-primary)] hover:shadow-[0_0_20px_rgba(151,206,76,0.15)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 >
                   <div className="aspect-square overflow-hidden bg-[var(--bg-terminal)]">
                     <img 
@@ -139,7 +139,7 @@ export function EpisodePage() {
                   </div>
 
                   <div className="p-3">
-                    <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-[var(--portal-cyan)] transition-colors">
+                    <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-[var(--color-primary)] transition-colors">
                       {char.name}
                     </p>
                     <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">

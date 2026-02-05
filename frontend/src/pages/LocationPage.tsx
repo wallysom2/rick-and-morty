@@ -70,10 +70,10 @@ export function LocationPage() {
       <div className="space-y-8">
         
         {/* Info Card */}
-        <TerminalCard title="LOCATION_DATA" className="border-[var(--dimension-purple)] shadow-[0_0_15px_rgba(168,85,247,0.1)]">
+        <TerminalCard title="LOCATION_DATA">
           <div className="info-row full-width">
             <div className="info-item">
-              <span className="info-label text-[var(--dimension-purple)]">
+              <span className="info-label">
                 <IoLocationOutline className="w-4 h-4" />
                 NOME
               </span>
@@ -82,14 +82,14 @@ export function LocationPage() {
           </div>
           <div className="info-row">
             <div className="info-item">
-              <span className="info-label text-[var(--dimension-purple)]">
+              <span className="info-label">
                 <IoPlanetOutline className="w-4 h-4" />
                 TIPO
               </span>
               <span className="info-value">{location.type || 'Desconhecido'}</span>
             </div>
             <div className="info-item">
-              <span className="info-label text-[var(--dimension-purple)]">
+              <span className="info-label">
                 <IoCubeOutline className="w-4 h-4" />
                 DIMENSAO
               </span>
@@ -98,7 +98,7 @@ export function LocationPage() {
           </div>
           <div className="info-row full-width">
             <div className="info-item">
-              <span className="info-label text-[var(--dimension-purple)]">
+              <span className="info-label">
                 <IoPeopleOutline className="w-4 h-4" />
                 RESIDENTES
               </span>
@@ -114,7 +114,7 @@ export function LocationPage() {
               <h2 className="text-xl font-bold font-title text-[var(--text-primary)]">
                 Residentes
               </h2>
-              <span className="text-sm text-[var(--dimension-purple)] bg-[var(--dimension-purple)]/10 px-3 py-1 rounded-full border border-[var(--dimension-purple)]/20">
+              <span className="text-sm text-[var(--text-muted)] bg-[var(--bg-terminal)] px-3 py-1 rounded-full border border-[var(--border-default)]">
                 {residents.length} encontrados
               </span>
             </div>
@@ -124,7 +124,7 @@ export function LocationPage() {
                 <Link
                   key={char.id}
                   to={`/character/${char.id}`}
-                  className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--dimension-purple)] hover:shadow-[0_0_20px_rgba(168,85,247,0.2)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                  className="group relative bg-[var(--bg-card)] rounded-xl overflow-hidden border border-[var(--border-default)] hover:border-[var(--color-primary)] hover:shadow-[0_0_20px_rgba(151,206,76,0.15)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 >
                   <div className="aspect-square overflow-hidden bg-[var(--bg-terminal)]">
                     <img 
@@ -144,7 +144,7 @@ export function LocationPage() {
                   </div>
 
                   <div className="p-3">
-                    <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-[var(--dimension-purple)] transition-colors">
+                    <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-[var(--color-primary)] transition-colors">
                       {char.name}
                     </p>
                     <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">
