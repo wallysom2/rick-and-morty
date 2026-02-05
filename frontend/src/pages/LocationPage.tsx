@@ -1,21 +1,33 @@
 import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useLocation, useMultipleCharacters } from '../hooks';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { TerminalCard } from '../components/TerminalCard';
+import { Pagination } from '../components/Pagination';
 
 export function LocationPage() {
   const { id } = useParams<{ id: string }>();
   const locationId = Number(id);
+  const [page, setPage] = useState(1);
+  const ITEMS_PER_PAGE = 20;
   
   const { data: location, isLoading, isError } = useLocation(locationId);
+
+  // Reset page when location changes
+  useEffect(() => {
+    setPage(1);
+  }, [locationId]);
   
   // Get resident IDs from URLs
   const residentIds = location?.residents?.map(url => {
     const match = url.match(/\/character\/(\d+)/);
     return match ? Number(match[1]) : 0;
   }).filter(id => id > 0) || [];
+
+  const totalPages = Math.ceil(residentIds.length / ITEMS_PER_PAGE);
+  const paginatedIds = residentIds.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   
-  const { data: residents = [] } = useMultipleCharacters(residentIds);
+  const { data: residents = [] } = useMultipleCharacters(paginatedIds);
 
   if (isLoading) {
     return (
@@ -144,6 +156,17 @@ export function LocationPage() {
                 </Link>
               ))}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                />
+              </div>
+            )}
           </div>
         )}
 
