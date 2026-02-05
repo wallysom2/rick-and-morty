@@ -110,6 +110,18 @@ code, pre, .font-mono {
   font-family: var(--font-mono);
 }
 
+/* Ensure pointer cursor on interactive elements */
+button,
+a,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+summary,
+.clickable {
+  cursor: pointer;
+}
+
 /* ============================================
    SCROLLBAR STYLING
    ============================================ */
